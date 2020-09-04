@@ -5,6 +5,7 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed Parser Microsoft SQL for 
 * [Version](#version)
 * [Important Note](#important-note)
 * [Prerequisite Python Modules](#prerequisite-python-modules)
+* [Dependent MSSQL Function](#dependent-mssql-function)
 
 ### Version
 * 0.0.1
@@ -36,3 +37,6 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed Parser Microsoft SQL for 
 * SQLAlchemy
   * `pip3.8 install sqlalchemy`
     * [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
+
+### Dependent MSSQL Function
+* [Omit Characters](https://github.com/Cuates/omitcharactersmssql)
