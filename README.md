@@ -14,7 +14,7 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed Parser Microsoft SQL for 
 
 ### Prerequisite Python Modules
 * List installed modules
-  # `pip3.8 list`
+  * `pip3.8 list`
 * MSSQL
   * `pip3.8 install pyodbc`
     * [PyODBC](https://pypi.org/project/pyodbc/)
