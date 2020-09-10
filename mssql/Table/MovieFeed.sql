@@ -27,10 +27,3 @@ GO
 
 ALTER TABLE [dbo].[MovieFeed] ADD  DEFAULT (getdate()) FOR [modified_date]
 GO
-
-ALTER TABLE [dbo].[MovieFeed]  WITH CHECK ADD  CONSTRAINT [FK_MovieFeed_actionstatus] FOREIGN KEY([actionstatus])
-REFERENCES [dbo].[ActionStatus] ([actionnumber])
-GO
-
-ALTER TABLE [dbo].[MovieFeed] CHECK CONSTRAINT [FK_MovieFeed_actionstatus]
-GO
