@@ -1,5 +1,5 @@
 # rssfeedrarbgdatabasepy
-Python [rarbg](https://rarbg.to/torrents.php) RSS Feed Parser Microsoft SQL for Movies and TVs Python
+> Python [rarbg](https://rarbg.to/torrents.php) RSS Feed Parser for Movies and TVs
 
 ## Table of Contents
 * [Version](#version)
