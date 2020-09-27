@@ -1,5 +1,5 @@
-# rssfeedredditdatabasepy
-> Python [reddit](https://www.reddit.com/) RSS Feed Parser for News
+# rssfeedrarbgdatabasepy
+> Python [rarbg](https://rarbg.to/) RSS Feed Parser for Media
 
 ## Table of Contents
 * [Version](#version)
