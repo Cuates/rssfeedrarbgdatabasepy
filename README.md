@@ -37,6 +37,9 @@
 * SQLAlchemy
   * `pip3.8 install sqlalchemy`
     * [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
+* Python JSON Logger
+  * `pip3.8 install python-json-logger`
+    * [PythonJsonLogger](https://pypi.org/project/python-json-logger/)
 
 ### Dependent MSSQL Function
 * [Omit Characters](https://github.com/Cuates/omitcharactersmssql)
