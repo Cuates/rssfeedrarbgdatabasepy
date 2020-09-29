@@ -4,7 +4,7 @@
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
 --     Created: 08/26/2020
---     Updated: 09/27/2020
+--     Updated: 09/29/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Media Feed
@@ -209,7 +209,8 @@ as $$
       publish_date = cast(md.mftpublishdate as timestamp),
       modified_date = cast(current_timestamp as timestamp)
       from movieDetails md
-      join MovieFeed mf on mf.mfID = md.mfmfID;
+      where
+      MovieFeed.mfID = md.mfmfID;
 
       -- Select message
       select
@@ -283,7 +284,8 @@ as $$
       publish_date = cast(td.tftpublishdate as timestamp),
       modified_date = cast(current_timestamp as timestamp)
       from tvDetails td
-      join TVFeed tf on tf.tfID = td.tftfID;
+      where
+      TVFeed.tfID = td.tftfID;
 
       -- Select message
       select
