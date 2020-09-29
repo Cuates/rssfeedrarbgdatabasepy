@@ -7,7 +7,7 @@ use <databasename>;
 --     Updated: 09/28/2020
 --  Programmer: Cuates
 --   Update By: Cuates
---     Purpose: Index movie feed title long
+--     Purpose: Index tv feed title long
 -- ========================================
 
 -- Index Drop
