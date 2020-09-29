@@ -11,7 +11,7 @@ use <databasename>;
 -- =====================================================
 
 -- Index Drop
-drop index if exists UQIX_MediaResolution_resolution;
+drop index if exists `UQIX_MediaResolution_resolution` on MediaResolution;
 
 -- Index Create
-create unique index UQIX_MediaResolution_resolution on MediaResolution ((resolution));
+create unique index `UQIX_MediaResolution_resolution` on MediaResolution (`resolution`);

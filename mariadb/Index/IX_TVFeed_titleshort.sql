@@ -11,7 +11,7 @@ use <databasename>;
 -- =========================================
 
 -- Index Drop
-drop index if exists IX_TVFeed_titleshort;
+drop index if exists `IX_TVFeed_titleshort` on TVFeed;
 
 -- Index Create
-create index IX_TVFeed_titleshort on TVFeed ((titleshort));
+create index `IX_TVFeed_titleshort` on TVFeed (`titleshort`);

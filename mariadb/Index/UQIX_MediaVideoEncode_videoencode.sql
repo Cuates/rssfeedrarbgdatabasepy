@@ -11,7 +11,7 @@ use <databasename>;
 -- ========================================================
 
 -- Index Drop
-drop index if exists UQIX_MediaVideoEncode_videoencode;
+drop index if exists `UQIX_MediaVideoEncode_videoencode` on MediaVideoEncode;
 
 -- Index Create
-create unique index UQIX_MediaVideoEncode_videoencode on MediaVideoEncode ((videoencode));
+create unique index `UQIX_MediaVideoEncode_videoencode` on MediaVideoEncode (`videoencode`);

@@ -11,7 +11,7 @@ use <databasename>;
 -- ==========================================================
 
 -- Index Drop
-drop index if exists UQIX_MediaStreamSource_streamsource;
+drop index if exists `UQIX_MediaStreamSource_streamsource` on MediaStreamSource;
 
 -- Index Create
-create unique index UQIX_MediaStreamSource_streamsource on MediaStreamSource ((streamsource));
+create unique index `UQIX_MediaStreamSource_streamsource` on MediaStreamSource (`streamsource`);

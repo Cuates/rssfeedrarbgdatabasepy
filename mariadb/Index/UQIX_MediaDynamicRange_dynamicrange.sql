@@ -11,7 +11,7 @@ use <databasename>;
 -- ===========================================================
 
 -- Index Drop
-drop index if exists UQIX_MediaDynamicRange_dynamicrange;
+drop index if exists `UQIX_MediaDynamicRange_dynamicrange` on MediaDynamicRange;
 
 -- Index Create
-create unique index UQIX_MediaDynamicRange_dynamicrange on MediaDynamicRange ((dynamicrange));
+create unique index `UQIX_MediaDynamicRange_dynamicrange` on MediaDynamicRange (`dynamicrange`);

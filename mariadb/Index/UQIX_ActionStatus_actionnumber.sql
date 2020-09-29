@@ -11,7 +11,7 @@ use <databasename>;
 -- =====================================================
 
 -- Index Drop
-drop index if exists UQIX_ActionStatus_actionnumber;
+drop index if exists `UQIX_ActionStatus_actionnumber` on ActionStatus;
 
 -- Index Create
-create unique index UQIX_ActionStatus_actionnumber on ActionStatus ((actionnumber));
+create unique index `UQIX_ActionStatus_actionnumber` on ActionStatus (`actionnumber`);

@@ -11,7 +11,7 @@ use <databasename>;
 -- ====================================================
 
 -- Index Drop
-drop index if exists UQIX_MediaAudioEncode_audioencode;
+drop index if exists `UQIX_MediaAudioEncode_audioencode` on MediaAudioEncode;
 
 -- Index Create
-create unique index UQIX_MediaAudioEncode_audioencode on MediaAudioEncode ((audioencode));
+create unique index `UQIX_MediaAudioEncode_audioencode` on MediaAudioEncode (`audioencode`);
