@@ -4,7 +4,7 @@ use <databasename>;
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
 --     Created: 08/26/2020
---     Updated: 09/27/2020
+--     Updated: 09/29/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Media Feed
@@ -225,7 +225,7 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
 
       -- Update records
       update MovieFeed mf
-      join MovieFeedTempTable mftt on mftt.mfttID = mf.mfID
+      inner join MovieFeedTempTable mftt on mftt.mfttID = mf.mfID
       set
       mf.publish_date = cast(mftt.publish_date as datetime),
       mf.modified_date = cast(current_timestamp(6) as datetime);
@@ -317,7 +317,7 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
 
       -- Update records
       update TVFeed tf
-      join TVFeedTempTable tftt on tftt.tfttID = tf.tfID
+      inner join TVFeedTempTable tftt on tftt.tfttID = tf.tfID
       set
       tf.publish_date = cast(tftt.publish_date as datetime),
       tf.modified_date = cast(current_timestamp(6) as datetime);
