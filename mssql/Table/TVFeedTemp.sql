@@ -1,19 +1,28 @@
-USE [Media]
-GO
+-- Database Connect
+use [Media]
+go
 
-SET ANSI_NULLS ON
-GO
+-- Set ansi nulls
+set ansi_nulls on
+go
 
-SET QUOTED_IDENTIFIER ON
-GO
+-- Set quoted identifier
+set quoted_identifier on
+go
 
-CREATE TABLE [dbo].[TVFeedTemp](
-	[titlelong] [nvarchar](255) NULL,
-	[titleshort] [nvarchar](255) NULL,
-	[publish_date] [nvarchar](255) NULL,
-	[created_date] [datetime2](7) NULL
-) ON [PRIMARY]
-GO
+-- Table Drop
+drop table if exists dbo.TVFeedTemp
+go
 
-ALTER TABLE [dbo].[TVFeedTemp] ADD  DEFAULT (getdate()) FOR [created_date]
-GO
+-- Table Create
+create table [dbo].[TVFeedTemp](
+	[titlelong] [nvarchar](255) null,
+	[titleshort] [nvarchar](255) null,
+	[publish_date] [nvarchar](255) null,
+	[created_date] [datetime2](6) null
+) on [primary]
+go
+
+-- Contraint Default
+alter table [dbo].[TVFeedTemp] add  default (getdate()) for [created_date]
+go

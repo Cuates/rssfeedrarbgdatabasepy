@@ -1,34 +1,46 @@
-USE [media]
-GO
+-- Database Connect
+use [Media]
+go
 
-SET ANSI_NULLS ON
-GO
+-- Set ansi nulls
+set ansi_nulls on
+go
 
-SET QUOTED_IDENTIFIER ON
-GO
+-- Set quoted identifier
+set quoted_identifier on
+go
 
-CREATE TABLE [dbo].[MediaVideoEncode](
-	[mveID] [bigint] IDENTITY(1,1) NOT NULL,
-	[videoencode] [nvarchar](100) NOT NULL,
-	[movieInclude] [bit] NOT NULL,
-	[tvInclude] [bit] NOT NULL,
-	[created_date] [datetime2](7) NOT NULL,
-	[modified_date] [datetime2](7) NULL,
- CONSTRAINT [PK_MediaVideoEncode_videoencode] PRIMARY KEY CLUSTERED 
+-- Table Drop
+drop table if exists dbo.MediaVideoEncode
+go
+
+-- Table Create
+create table [dbo].[MediaVideoEncode](
+	[mveID] [bigint] identity(1,1) not null,
+	[videoencode] [nvarchar](100) not null,
+	[movieInclude] [bit] not null,
+	[tvInclude] [bit] not null,
+	[created_date] [datetime2](6) not null,
+	[modified_date] [datetime2](6) null,
+ CONSTRAINT [PK_MediaVideoEncode_videoencode] primary key clustered
 (
-	[videoencode] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
+	[videoencode] asc
+)with (pad_index = off, statistics_norecompute = off, ignore_dup_key = off, allow_row_locks = on, allow_page_locks = on, fillfactor = 90, optimize_for_sequential_key = off) on [primary]
+) on [primary]
+go
 
-ALTER TABLE [dbo].[MediaVideoEncode] ADD  DEFAULT (0) FOR [movieInclude]
-GO
+-- Contraint Default
+alter table [dbo].[MediaVideoEncode] add  default (0) for [movieInclude]
+go
 
-ALTER TABLE [dbo].[MediaVideoEncode] ADD  DEFAULT (0) FOR [tvInclude]
-GO
+-- Contraint Default
+alter table [dbo].[MediaVideoEncode] add  default (0) for [tvInclude]
+go
 
-ALTER TABLE [dbo].[MediaVideoEncode] ADD  DEFAULT (getdate()) FOR [created_date]
-GO
+-- Contraint Default
+alter table [dbo].[MediaVideoEncode] add  default (getdate()) for [created_date]
+go
 
-ALTER TABLE [dbo].[MediaVideoEncode] ADD  DEFAULT (getdate()) FOR [modified_date]
-GO
+-- Contraint Default
+alter table [dbo].[MediaVideoEncode] add  default (getdate()) for [modified_date]
+go

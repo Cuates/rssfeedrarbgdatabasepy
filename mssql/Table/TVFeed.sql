@@ -1,29 +1,39 @@
-USE [media]
-GO
+-- Database Connect
+use [Media]
+go
 
-SET ANSI_NULLS ON
-GO
+-- Set ansi nulls
+set ansi_nulls on
+go
 
-SET QUOTED_IDENTIFIER ON
-GO
+-- Set quoted identifier
+set quoted_identifier on
+go
 
-CREATE TABLE [dbo].[TVFeed](
-	[tfID] [bigint] IDENTITY(1,1) NOT NULL,
-	[titlelong] [nvarchar](255) NOT NULL,
-	[titleshort] [nvarchar](255) NOT NULL,
-	[publish_date] [datetime2](7) NOT NULL,
-	[actionstatus] [int] NOT NULL,
-	[created_date] [datetime2](7) NOT NULL,
-	[modified_date] [datetime2](7) NULL,
- CONSTRAINT [PK_TVFeed_titlelong] PRIMARY KEY CLUSTERED
+-- Table Drop
+drop table if exists dbo.TVFeed
+go
+
+-- Table Create
+create table [dbo].[TVFeed](
+	[tfID] [bigint] identity(1,1) not null,
+	[titlelong] [nvarchar](255) not null,
+	[titleshort] [nvarchar](255) not null,
+	[publish_date] [datetime2](6) not null,
+	[actionstatus] [int] not null,
+	[created_date] [datetime2](6) not null,
+	[modified_date] [datetime2](6) null,
+ constraint [PK_TVFeed_titlelong] primary key clustered
 (
-	[titlelong] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
+	[titlelong] asc
+)with (pad_index = off, statistics_norecompute = off, ignore_dup_key = off, allow_row_locks = on, allow_page_locks = on, fillfactor = 90, optimize_for_sequential_key = off) on [primary]
+) on [primary]
+go
 
-ALTER TABLE [dbo].[TVFeed] ADD  DEFAULT (getdate()) FOR [created_date]
-GO
+-- Contraint Default
+alter table [dbo].[TVFeed] add  default (getdate()) for [created_date]
+go
 
-ALTER TABLE [dbo].[TVFeed] ADD  DEFAULT (getdate()) FOR [modified_date]
-GO
+-- Contraint Default
+alter table [dbo].[TVFeed] add  default (getdate()) for [modified_date]
+go
