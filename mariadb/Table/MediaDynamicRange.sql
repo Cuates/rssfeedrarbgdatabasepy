@@ -11,7 +11,7 @@ use <databasename>;
 -- ================================
 
 -- Drop Table
-drop table if exists MediaAudioEncode;
+drop table if exists MediaDynamicRange;
 
 -- Table Create
 create table if not exists `MediaDynamicRange`(
