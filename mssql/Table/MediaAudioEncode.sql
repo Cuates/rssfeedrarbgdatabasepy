@@ -1,5 +1,5 @@
 -- Database Connect
-use [Media]
+use [databasename]
 go
 
 -- Set ansi nulls
@@ -16,15 +16,15 @@ go
 
 -- Table Create
 create table [dbo].[MediaAudioEncode](
-	[maeID] [bigint] identity(1,1) not null,
-	[audioencode] [nvarchar](100) not null,
-	[movieInclude] [bit] not null,
-	[tvInclude] [bit] not null,
-	[created_date] [datetime2](6) not null,
-	[modified_date] [datetime2](6) null,
+  [maeID] [bigint] identity(1,1) not null,
+  [audioencode] [nvarchar](100) not null,
+  [movieInclude] [bit] not null,
+  [tvInclude] [bit] not null,
+  [created_date] [datetime2](6) not null,
+  [modified_date] [datetime2](6) null,
  CONSTRAINT [PK_MediaAudioEncode_audioencode] primary key clustered
 (
-	[audioencode] asc
+  [audioencode] asc
 )with (pad_index = off, statistics_norecompute = off, ignore_dup_key = off, allow_row_locks = on, allow_page_locks = on, fillfactor = 90, optimize_for_sequential_key = off) on [primary]
 ) on [primary]
 go
