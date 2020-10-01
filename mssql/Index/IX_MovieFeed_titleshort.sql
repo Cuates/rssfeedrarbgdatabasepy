@@ -1,5 +1,5 @@
 -- Database Connect
-use [Media]
+use [databasename]
 go
 
 -- Set ansi padding
