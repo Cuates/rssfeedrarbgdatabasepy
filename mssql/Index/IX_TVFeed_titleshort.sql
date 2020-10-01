@@ -1,12 +1,17 @@
-USE [media]
-GO
+-- Database Connect
+use [Media]
+go
 
-SET ANSI_PADDING ON
-GO
+-- Set ansi padding
+set ansi_padding on
+go
 
-/****** Object:  Index [IX_TVFeed_titleshort]    Script Date: 2020-09-03 16:35:47 ******/
-CREATE NONCLUSTERED INDEX [IX_TVFeed_titleshort] ON [dbo].[TVFeed]
+-- Index Drop
+drop index if exists IX_TVFeed_titleshort on dbo.TVFeed
+
+-- Index Create
+create nonclustered index [IX_TVFeed_titleshort] on [dbo].[TVFeed]
 (
-	[titleshort] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-GO
+  [titleshort] asc
+)with (pad_index = off, statistics_norecompute = off, sort_in_tempdb = off, drop_existing = off, online = off, allow_row_locks = on, allow_page_locks = on, optimize_for_sequential_key = off) on [primary]
+go
