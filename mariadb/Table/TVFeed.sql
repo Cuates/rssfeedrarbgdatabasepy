@@ -4,7 +4,7 @@ use <databasename>;
 -- =======================
 --        File: TVFeed
 --     Created: 09/07/2020
---     Updated: 09/28/2020
+--     Updated: 09/30/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: TV Feed
@@ -20,8 +20,8 @@ create table if not exists `TVFeed`(
   `titleshort` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `publish_date` datetime not null,
   `actionstatus` int(11) not null default 0,
-  `created_date` datetime not null default current_timestamp(),
-  `modified_date` datetime default current_timestamp(),
+  `created_date` datetime(6) not null default current_timestamp(6),
+  `modified_date` datetime(6) default current_timestamp(6),
   primary key (`tfID`),
   unique key `UQIX_TVFeed_titlelong` (`titlelong`),
   index `IX_TVFeed_titleshort` (`titleshort`)
