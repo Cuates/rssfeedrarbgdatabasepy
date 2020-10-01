@@ -11,7 +11,7 @@ use <databasename>;
 -- =============================
 
 -- Drop Table
-drop table if exists MediaDynamicRange;
+drop table if exists MediaResolution;
 
 -- Table Create
 create table if not exists `MediaResolution`(
