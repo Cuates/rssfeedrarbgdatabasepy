@@ -4,7 +4,7 @@
 -- =======================
 --        File: TVFeed
 --     Created: 09/07/2020
---     Updated: 09/27/2020
+--     Updated: 10/05/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: TV Feed
@@ -22,8 +22,8 @@ drop table if exists TVFeed;
 -- Table Create
 create table if not exists TVFeed(
   tfID bigint not null default nextval('TVFeed_tfID_seq'),
-  titlelong varchar(255) not null,
-  titleshort varchar(255) not null,
+  titlelong citext not null,
+  titleshort citext not null,
   publish_date timestamp not null,
   actionstatus int not null,
   created_date timestamp not null default current_timestamp,
