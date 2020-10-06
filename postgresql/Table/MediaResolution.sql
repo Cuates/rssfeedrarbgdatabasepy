@@ -4,7 +4,7 @@
 -- =============================
 --        File: MediaResolution
 --     Created: 09/07/2020
---     Updated: 09/27/2020
+--     Updated: 10/05/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media resolution
@@ -22,7 +22,7 @@ drop table if exists MediaDynamicRange;
 -- Table Create
 create table if not exists MediaResolution(
   mrID bigint not null default nextval('MediaResolution_mrID_seq'),
-  resolution varchar(100) not null,
+  resolution citext not null,
   movieInclude bit(1) not null default b'0',
   tvInclude bit(1) not null default b'0',
   created_date timestamp not null default current_timestamp,
