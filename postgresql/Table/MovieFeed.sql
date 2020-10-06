@@ -4,7 +4,7 @@
 -- =======================
 --        File: MovieFeed
 --     Created: 09/07/2020
---     Updated: 09/27/2020
+--     Updated: 10/05/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Movie Feed
@@ -22,8 +22,8 @@ drop table if exists MovieFeed;
 -- Table Create
 create table if not exists MovieFeed(
   mfID bigint not null default nextval('MovieFeed_mfID_seq'),
-  titlelong varchar(255) not null,
-  titleshort varchar(255) not null,
+  titlelong citext not null,
+  titleshort citext not null,
   publish_date timestamp not null,
   actionstatus int not null,
   created_date timestamp not null default current_timestamp,
