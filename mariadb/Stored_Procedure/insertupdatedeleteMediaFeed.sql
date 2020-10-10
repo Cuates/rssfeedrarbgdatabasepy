@@ -334,12 +334,12 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
         std.tftfID as `tfID`
         from subTVDetails std
         join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
-        join MediaAudioEncode mae on mae.tvInclude in (1) and std.tfttitlelonglower like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.tvInclude in (1) and std.tfttitlelonglower like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.tvInclude in (1) and std.tfttitlelonglower like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.tvInclude in (1) and std.tfttitlelonglower like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.tvInclude in (1) and std.tfttitlelonglower like concat('%', mve.videoencode, '%')
-        group by std.tfttitlelong, std.tfttitleshort, std.publishdate, std.tfasactionstatus, std.tftfID
+        join MediaAudioEncode mae on mae.tvInclude in (1) and std.tfttitlelong like concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.tvInclude in (1) and std.tfttitlelong like concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.tvInclude in (1) and std.tfttitlelong like concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.tvInclude in (1) and std.tfttitlelong like concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.tvInclude in (1) and std.tfttitlelong like concat('%', mve.videoencode, '%')
+        group by std.tfttitlelong, std.tfttitleshort, std.tftpublishdate, std.tfasactionstatus, std.tftfID
       )
 
       -- Select records
@@ -528,11 +528,11 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
         std.tftfID as `tfID`
         from subTVDetails std
         join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
-        join MediaAudioEncode mae on mae.tvInclude in (1) and std.tfttitlelonglower like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.tvInclude in (1) and std.tfttitlelonglower like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.tvInclude in (1) and std.tfttitlelonglower like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.tvInclude in (1) and std.tfttitlelonglower like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.tvInclude in (1) and std.tfttitlelonglower like concat('%', mve.videoencode, '%')
+        join MediaAudioEncode mae on mae.tvInclude in (1) and std.tfttitlelong like concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.tvInclude in (1) and std.tfttitlelong like concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.tvInclude in (1) and std.tfttitlelong like concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.tvInclude in (1) and std.tfttitlelong like concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.tvInclude in (1) and std.tfttitlelong like concat('%', mve.videoencode, '%')
         group by std.tfttitlelong, std.tfttitleshort, std.tftpublishdate, std.tfasactionstatus, std.tftfID
       )
 
