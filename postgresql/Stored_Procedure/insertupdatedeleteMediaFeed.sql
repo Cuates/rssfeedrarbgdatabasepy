@@ -202,7 +202,7 @@ as $$
         substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
         substring(trim(regexp_replace(regexp_replace(smd.mfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
         substring(trim(regexp_replace(regexp_replace(smd.mftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
-        smd.mfactionstatus as actionstatus,
+        smd.mfasactionstatus as actionstatus,
         smd.mfmfID as mfID
         from subMovieDetails smd
         join filteredMovieDetails fmd on fmd.titlelong = smd.mfttitlelong and fmd.publishdate = smd.mftpublishdate
@@ -347,8 +347,8 @@ as $$
         left join MovieFeed mfas on mfas.titleshort = mft.titleshort
         where
         (
-          mf.actionstatus not in (1) or
-          mf.actionstatus is null
+          mfas.actionstatus not in (1) or
+          mfas.actionstatus is null
         ) and
         mf.mfID is null and
         (
@@ -385,7 +385,7 @@ as $$
         substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
         substring(trim(regexp_replace(regexp_replace(smd.mfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
         substring(trim(regexp_replace(regexp_replace(smd.mftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
-        smd.mfactionstatus as actionstatus,
+        smd.mfasactionstatus as actionstatus,
         smd.mfmfID as mfID
         from subMovieDetails smd
         join filteredMovieDetails fmd on fmd.titlelong = smd.mfttitlelong and fmd.publishdate = smd.mftpublishdate
@@ -412,9 +412,9 @@ as $$
 
       -- Select records
       select
-      md.mfttitlelong,
-      md.mfttitleshort,
-      cast(md.mftpublishdate as timestamp),
+      md.titlelong,
+      md.titleshort,
+      cast(md.publishdate as timestamp),
       case
         when md.actionstatus is null
           then
@@ -490,7 +490,7 @@ as $$
         substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
         substring(trim(regexp_replace(regexp_replace(std.tfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
         substring(trim(regexp_replace(regexp_replace(std.tftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
-        std.tfactionstatus as actionstatus,
+        std.tfasactionstatus as actionstatus,
         std.tftfID as tfID
         from subTVDetails std
         join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
