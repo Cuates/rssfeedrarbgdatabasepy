@@ -4,7 +4,7 @@
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
 --     Created: 08/26/2020
---     Updated: 09/29/2020
+--     Updated: 10/10/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Media Feed
@@ -16,63 +16,79 @@ drop procedure if exists insertupdatedeleteMediaFeed;
 -- Procedure Create Or Replace
 create or replace procedure insertupdatedeleteMediaFeed(in optionMode text, in titlelong text default null, in titleshort text default null, in publishDate text default null, inout status text default null)
 as $$
-  -- Declare variable
+  -- Declare and set variable
   declare yearString varchar(255) := '';
+  declare omitOptionMode varchar(255) := '[^a-zA-Z]';
+  declare omitTitleLong varchar(255) := '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
+  declare omitTitleShort varchar(255) := '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
+  declare omitPublishDate varchar(255) := '[^0-9\-: ]';
 
   begin
-    -- Omit characters, multi space to single space, and trim leading and trailing spaces
-    optionMode := trim(regexp_replace(regexp_replace(optionMode, '[^a-zA-Z]', ' '), '[ ]{2,}', ' '));
+    -- Check if parameter is not null
+    if optionMode is not null then
+      -- Omit characters, multi space to single space, and trim leading and trailing spaces
+      optionMode := trim(regexp_replace(regexp_replace(optionMode, omitOptionMode, ' '), '[ ]{2,}', ' '));
 
-    -- Check if empty string
-    if optionMode = '' then
-      -- Set parameter to null if empty string
-      optionMode := nullif(optionMode, '');
+      -- Set character limit
+      optionMode := substring(optionMode, 1, 255);
+
+      -- Check if empty string
+      if optionMode = '' then
+        -- Set parameter to null if empty string
+        optionMode := nullif(optionMode, '');
+      end if;
     end if;
 
-    -- Set character limit
-    optionMode := substring(optionMode, 1, 255);
+    -- Check if parameter is not null
+    if titleLong is not null then
+      -- Omit characters, multi space to single space, and trim leading and trailing spaces
+      titlelong := trim(regexp_replace(regexp_replace(titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '));
 
-    -- Omit characters, multi space to single space, and trim leading and trailing spaces
-    titlelong := trim(regexp_replace(regexp_replace(titlelong, '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]', ' '), '[ ]{2,}', ' '));
+      -- Set character limit
+      titlelong := substring(titlelong, 1, 255);
 
-    -- Check if empty string
-    if titlelong = '' then
-      -- Set parameter to null if empty string
-      titlelong := nullif(titlelong, '');
+      -- Check if empty string
+      if titlelong = '' then
+        -- Set parameter to null if empty string
+        titlelong := nullif(titlelong, '');
+      end if;
     end if;
 
-    -- Set character limit
-    titlelong := substring(titlelong, 1, 255);
+    -- Check if parameter is not null
+    if titleShort is not null then
+      -- Omit characters, multi space to single space, and trim leading and trailing spaces
+      titleshort := trim(regexp_replace(regexp_replace(titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '));
 
-    -- Omit characters, multi space to single space, and trim leading and trailing spaces
-    titleshort := trim(regexp_replace(regexp_replace(titleshort, '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]', ' '), '[ ]{2,}', ' '));
+      -- Set character limit
+      titleshort := substring(titleshort, 1, 255);
 
-    -- Check if empty string
-    if titleshort = '' then
-      -- Set parameter to null if empty string
-      titleshort := nullif(titleshort, '');
+      -- Check if empty string
+      if titleshort = '' then
+        -- Set parameter to null if empty string
+        titleshort := nullif(titleshort, '');
+      end if;
     end if;
 
-    -- Set character limit
-    titleshort := substring(titleshort, 1, 255);
+    -- Check if parameter is not null
+    if publishDate is not null then
+      -- Omit characters, multi space to single space, and trim leading and trailing spaces
+      publishDate := trim(regexp_replace(regexp_replace(publishDate, omitPublishDate, ' '), '[ ]{2,}', ' '));
 
-    -- Omit characters, multi space to single space, and trim leading and trailing spaces
-    publishDate := trim(regexp_replace(regexp_replace(publishDate, '[^0-9\-: ]', ' '), '[ ]{2,}', ' '));
+      -- Set character limit
+      publishDate := substring(publishDate, 1, 255);
 
-    -- Check if the parameter cannot be casted into a date time
-    if to_timestamp(publishDate, 'YYYY-MM-DD HH24:MI:SS') is null then
-      -- Set the string as empty to be nulled below
-      publishDate := '';
+      -- Check if the parameter cannot be casted into a date time
+      if to_timestamp(publishDate, 'YYYY-MM-DD HH24:MI:SS') is null then
+        -- Set the string as empty to be nulled below
+        publishDate := '';
+      end if;
+
+      -- Check if empty string
+      if publishDate = '' then
+        -- Set parameter to null if empty string
+        publishDate := nullif(publishDate, '');
+      end if;
     end if;
-
-    -- Check if empty string
-    if publishDate = '' then
-      -- Set parameter to null if empty string
-      publishDate := nullif(publishDate, '');
-    end if;
-
-    -- Set character limit
-    publishDate := substring(publishDate, 1, 255);
 
     -- Check if option mode is delete temp movie
     if optionMode = 'deleteTempMovie' then
@@ -142,75 +158,83 @@ as $$
         -- Select unique records
         select
         trim(mft.titlelong) as mfttitlelong,
-        lower(trim(mft.titlelong)) as mfttitlelonglower,
         trim(mft.titleshort) as mfttitleshort,
         mft.publish_date as mftpublishdate,
-        mf.mfID as mfmfID,
-        trim(mf.titlelong) as mftitlelong,
-        lower(trim(mf.titlelong)) as mftitlelonglower,
-        trim(mf.titleshort) as mftitleshort,
-        mf.actionstatus as mfactionstatus
+        mfas.actionstatus as mfasactionstatus,
+        mf.mfID as mfmfID
         from MovieFeedTemp mft
-        left join MovieFeed mf on mf.titleshort = mft.titleshort
+        left join MovieFeed mf on mf.titlelong = mft.titlelong
+        left join MovieFeed mfas on mfas.titleshort = mft.titleshort
         where
+        mfas.actionstatus not in (1) and
+        mf.mfID is not null and
         (
-          mf.actionstatus not in (1) and
-          mf.actionstatus is not null
-        ) and
-        (
-          mft.titlelong is not null and
-          mft.titleshort is not null and
-          mft.publish_date is not null
+          (
+            trim(mft.titlelong) <> '' and
+            trim(mft.titleshort) <> '' and
+            trim(mft.publish_date) <> ''
+          ) or
+          (
+            mft.titlelong is not null and
+            mft.titleshort is not null and
+            mft.publish_date is not null
+          )
         ) and
         (
           cast(mft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
           cast(mft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
         )
-        group by mft.titlelong, mft.titleshort, mft.publish_date, mf.titlelong, mf.titleshort, mf.actionstatus, mf.mfID
+        group by mft.titlelong, mft.titleshort, mft.publish_date, mfas.actionstatus, mf.mfID
+      ),
+      filteredMovieDetails as
+      (
+        -- Select unique records
+        select
+        smd.mfttitlelong as titlelong,
+        max(smd.mftpublishdate) as publishdate
+        from subMovieDetails smd
+        group by smd.mfttitlelong
       ),
       movieDetails as
       (
         -- Select unique records
         select
-        smd.mfttitlelong as mfttitlelong,
-        smd.mfttitlelonglower as mfttitlelonglower,
-        smd.mfttitleshort as mfttitleshort,
-        max(smd.mftpublishdate) as mftpublishdate,
-        smd.mfactionstatus as mftactionstatus,
-        smd.mfmfID as mfmfID
+        substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
+        substring(trim(regexp_replace(regexp_replace(smd.mfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
+        substring(trim(regexp_replace(regexp_replace(smd.mftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
+        smd.mfactionstatus as actionstatus,
+        smd.mfmfID as mfID
         from subMovieDetails smd
-        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mve.videoencode, '%')
+        join filteredMovieDetails fmd on fmd.titlelong = smd.mfttitlelong and fmd.publishdate = smd.mftpublishdate
+        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelong like concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelong like concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelong like concat('%', mve.videoencode, '%')
         where
-        (
-          smd.mfttitlelonglower = smd.mftitlelonglower
-        ) and
         (
           (
             yearString like '%|%' and
             (
-              smd.mfttitlelonglower like concat('%', substring(yearString, 1, 4), '%') or
-              smd.mfttitlelonglower like concat('%', substring(yearString, 6, 9), '%')
+              smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%') or
+              smd.mfttitlelong like concat('%', substring(yearString, 6, 9), '%')
             )
           ) or
           (
-            smd.mfttitlelonglower like concat('%', substring(yearString, 1, 4), '%')
+            smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%')
           )
         )
-        group by smd.mfttitlelong, smd.mfttitlelonglower, smd.mfttitleshort, smd.mfactionstatus, smd.mfmfID
+        group by smd.mfttitlelong, smd.mfttitleshort, smd.mftpublishdate, smd.mfasactionstatus, smd.mfmfID
       )
 
       -- Update records
       update MovieFeed
       set
-      publish_date = cast(md.mftpublishdate as timestamp),
+      publish_date = cast(md.publishdate as timestamp),
       modified_date = cast(current_timestamp as timestamp)
       from movieDetails md
       where
-      MovieFeed.mfID = md.mfmfID;
+      md.mfID = MovieFeed.mfID;
 
       -- Select message
       select
@@ -224,68 +248,70 @@ as $$
         -- Select unique records
         select
         trim(tft.titlelong) as tfttitlelong,
-        lower(trim(tft.titlelong)) as tfttitlelonglower,
         trim(tft.titleshort) as tfttitleshort,
         tft.publish_date as tftpublishdate,
-        tf.tfID as tftfID,
-        trim(tf.titlelong) as tftitlelong,
-        lower(trim(tf.titlelong)) as tftitlelonglower,
-        trim(tf.titleshort) as tftitleshort,
-        tf.actionstatus as tfactionstatus
+        tfas.actionstatus as tfasactionstatus,
+        tf.tfID as tftfID
         from TVFeedTemp tft
-        left join TVFeed tf on tf.titleshort = tft.titleshort
+        left join TVFeed tf on tf.titlelong = tft.titlelong
+        left join TVFeed tfas on tfas.titleshort = tft.titleshort
         where
+        tfas.actionstatus not in (1) and
+        tf.tfID is not null and
         (
-          tf.actionstatus not in (1) and
-          tf.actionstatus is not null
-        ) and
-        (
-          tft.titlelong is not null and
-          tft.titleshort is not null and
-          tft.publish_date is not null
+          (
+            trim(tft.titlelong) <> '' and
+            trim(tft.titleshort) <> '' and
+            trim(tft.publish_date) <> ''
+          ) or
+          (
+            tft.titlelong is not null and
+            tft.titleshort is not null and
+            tft.publish_date is not null
+          )
         ) and
         (
           cast(tft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
           cast(tft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
         )
-        group by tft.titlelong, tft.titleshort, tft.publish_date, tf.titlelong, tf.titleshort, tf.actionstatus, tf.tfID
+        group by tft.titlelong, tft.titleshort, tft.publish_date, tfas.actionstatus, tf.tfID
+      ),
+      filteredTVDetails as
+      (
+        -- Select unique records
+        select
+        std.tfttitlelong as titlelong,
+        max(std.tftpublishdate) as publishdate
+        from subTVDetails std
+        group by std.tfttitlelong
       ),
       tvDetails as
       (
         -- Select unique records
         select
-        std.tfttitlelong as tfttitlelong,
-        std.tfttitleshort as tfttitleshort,
-        cast(max(std.tftpublishdate) as timestamp) as tftpublishdate,
-        case
-          when std.tfactionstatus is null
-            then
-              cast(0 as int)
-          else
-            cast(std.tfactionstatus as int)
-        end as tfactionstatus,
-        std.tftfID as tftfID
+        substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
+        substring(trim(regexp_replace(regexp_replace(std.tfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
+        substring(trim(regexp_replace(regexp_replace(std.tftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
+        std.tfasactionstatus as actionstatus,
+        std.tftfID as tfID
         from subTVDetails std
-        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mve.videoencode, '%')
-        where
-        (
-          std.tfttitlelonglower = std.tftitlelonglower
-        )
-        group by std.tfttitlelong, std.tfttitleshort, std.tfactionstatus, std.tftfID
+        join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
+        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelong like concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelong like concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelong like concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelong like concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelong like concat('%', mve.videoencode, '%')
+        group by std.tfttitlelong, std.tfttitleshort, std.tftpublishdate, std.tfasactionstatus, std.tftfID
       )
 
       -- Update records
       update TVFeed
       set
-      publish_date = cast(td.tftpublishdate as timestamp),
+      publish_date = cast(td.publishdate as timestamp),
       modified_date = cast(current_timestamp as timestamp)
       from tvDetails td
       where
-      TVFeed.tfID = td.tftfID;
+      td.tfID = TVFeed.tfID;
 
       -- Select message
       select
@@ -312,86 +338,95 @@ as $$
         -- Select unique records
         select
         trim(mft.titlelong) as mfttitlelong,
-        lower(trim(mft.titlelong)) as mfttitlelonglower,
         trim(mft.titleshort) as mfttitleshort,
         mft.publish_date as mftpublishdate,
-        mf.mfID as mfmfID,
-        trim(mf.titlelong) as mftitlelong,
-        lower(trim(mf.titlelong)) as mftitlelonglower,
-        trim(mf.titleshort) as mftitleshort,
-        mf.actionstatus as mfactionstatus
+        mfas.actionstatus as mfasactionstatus,
+        mf.mfID as mfmfID
         from MovieFeedTemp mft
-        left join MovieFeed mf on mf.titleshort = mft.titleshort
+        left join MovieFeed mf on mf.titlelong = mft.titlelong
+        left join MovieFeed mfas on mfas.titleshort = mft.titleshort
         where
         (
           mf.actionstatus not in (1) or
           mf.actionstatus is null
         ) and
+        mf.mfID is null and
         (
-          mft.titlelong is not null and
-          mft.titleshort is not null and
-          mft.publish_date is not null
+          (
+            trim(mft.titlelong) <> '' and
+            trim(mft.titleshort) <> '' and
+            trim(mft.publish_date) <> ''
+          ) or
+          (
+            mft.titlelong is not null and
+            mft.titleshort is not null and
+            mft.publish_date is not null
+          )
         ) -- and
         -- (
         --   cast(mft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
         --   cast(mft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
         -- )
-        group by mft.titlelong, mft.titleshort, mft.publish_date, mf.titlelong, mf.titleshort, mf.actionstatus, mf.actionstatus, mf.mfID
+        group by mft.titlelong, mft.titleshort, mft.publish_date, mfas.actionstatus, mf.mfID
+      ),
+      filteredMovieDetails as
+      (
+        -- Select unique records
+        select
+        smd.mfttitlelong as titlelong,
+        max(smd.mftpublishdate) as publishdate
+        from subMovieDetails smd
+        group by smd.mfttitlelong
       ),
       movieDetails as
       (
         -- Select unique records
         select
-        smd.mfttitlelong as mfttitlelong,
-        smd.mfttitleshort as mfttitleshort,
-        cast(max(smd.mftpublishdate) as timestamp) as mftpublishdate,
-        case
-          when smd.mfactionstatus is null
-            then
-              cast(0 as int)
-          else
-            cast(smd.mfactionstatus as int)
-        end as mfactionstatus,
-        smd.mfmfID as mfmfID
+        substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
+        substring(trim(regexp_replace(regexp_replace(smd.mfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
+        substring(trim(regexp_replace(regexp_replace(smd.mftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
+        smd.mfactionstatus as actionstatus,
+        smd.mfmfID as mfID
         from subMovieDetails smd
-        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelonglower like concat('%', mve.videoencode, '%')
+        join filteredMovieDetails fmd on fmd.titlelong = smd.mfttitlelong and fmd.publishdate = smd.mftpublishdate
+        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelong like concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelong like concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelong like concat('%', mve.videoencode, '%')
         where
-        (
-          smd.mfttitlelonglower <> smd.mftitlelonglower or
-          smd.mftitlelong is null
-        ) and
         (
           (
             yearString like '%|%' and
             (
-              smd.mfttitlelonglower like concat('%', substring(yearString, 1, 4), '%') or
-              smd.mfttitlelonglower like concat('%', substring(yearString, 6, 9), '%')
+              smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%') or
+              smd.mfttitlelong like concat('%', substring(yearString, 6, 9), '%')
             )
           ) or
           (
-            smd.mfttitlelonglower like concat('%', substring(yearString, 1, 4), '%')
+            smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%')
           )
         )
-        group by smd.mfttitlelong, smd.mfttitlelonglower, smd.mfttitleshort, smd.mfactionstatus, smd.mfmfID
+        group by smd.mfttitlelong, smd.mfttitleshort, smd.mftpublishdate, smd.mfasactionstatus, smd.mfmfID
       )
 
       -- Select records
       select
       md.mfttitlelong,
       md.mfttitleshort,
-      md.mftpublishdate,
-      md.mfactionstatus,
+      cast(md.mftpublishdate as timestamp),
+      case
+        when md.actionstatus is null
+          then
+            0
+        else
+          md.actionstatus
+      end,
       cast(current_timestamp as timestamp),
       cast(current_timestamp as timestamp)
       from movieDetails md
-      left join MovieFeed mf on mf.titlelong = md.mfttitlelong
-      where
-      mf.titlelong is null
-      group by md.mfttitlelong, md.mfttitleshort, md.mftpublishdate, md.mfactionstatus;
+      left join MovieFeed mf on mf.mfID = md.mfID
+      group by md.titlelong, md.titleshort, md.publishdate, md.actionstatus;
 
       -- Select message
       select
@@ -408,74 +443,82 @@ as $$
         -- Select unique records
         select
         trim(tft.titlelong) as tfttitlelong,
-        lower(trim(tft.titlelong)) as tfttitlelonglower,
         trim(tft.titleshort) as tfttitleshort,
         tft.publish_date as tftpublishdate,
-        tf.tfID as tftfID,
-        trim(tf.titlelong) as tftitlelong,
-        lower(trim(tf.titlelong)) as tftitlelonglower,
-        trim(tf.titleshort) as tftitleshort,
-        tf.actionstatus as tfactionstatus
+        tfas.actionstatus as tfasactionstatus,
+        tf.tfID as tftfID
         from TVFeedTemp tft
-        left join TVFeed tf on tf.titleshort = tft.titleshort
+        left join TVFeed tf on tf.titlelong = tft.titlelong
+        left join TVFeed tfas on tfas.titleshort = tft.titleshort
         where
         (
           tf.actionstatus not in (1) or
           tf.actionstatus is null
         ) and
+        tf.tfID is null and
         (
-          tft.titlelong is not null and
-          tft.titleshort is not null and
-          tft.publish_date is not null
+          (
+            trim(tft.titlelong) <> '' and
+            trim(tft.titleshort) <> '' and
+            trim(tft.publish_date) <> ''
+          ) or
+          (
+            tft.titlelong is not null and
+            tft.titleshort is not null and
+            tft.publish_date is not null
+          )
         ) -- and
         -- (
         --   cast(tft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
         --   cast(tft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
         -- )
-        group by tft.titlelong, tft.titleshort, tft.publish_date, tf.titlelong, tf.titleshort, tf.actionstatus, tf.tfID
+        group by tft.titlelong, tft.titleshort, tft.publish_date, tfas.actionstatus, tf.tfID
+      ),
+      filteredTVDetails as
+      (
+        -- Select unique records
+        select
+        std.tfttitlelong as titlelong,
+        max(std.tftpublishdate) as publishdate
+        from subTVDetails std
+        group by std.tfttitlelong
       ),
       tvDetails as
       (
         -- Select unique records
         select
-        std.tfttitlelong as tfttitlelong,
-        std.tfttitleshort as tfttitleshort,
-        cast(max(std.tftpublishdate) as timestamp) as tftpublishdate,
-        case
-          when std.tfactionstatus is null
-            then
-              cast(0 as int)
-          else
-            cast(std.tfactionstatus as int)
-        end as tfactionstatus,
-        std.tftfID as tftfID
+        substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as titlelong,
+        substring(trim(regexp_replace(regexp_replace(std.tfttitleshort, omitTitleShort, ' '), '[ ]{2,}', ' ')), 1, 255) as titleshort,
+        substring(trim(regexp_replace(regexp_replace(std.tftpublishdate, omitPublishDate, ' '), '[ ]{2,}', ' ')), 1, 255) as publishdate,
+        std.tfactionstatus as actionstatus,
+        std.tftfID as tfID
         from subTVDetails std
-        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelonglower like concat('%', mve.videoencode, '%')
-        where
-        (
-          std.tfttitlelonglower <> std.tftitlelonglower or
-          std.tftitlelong is null
-        )
-        group by std.tfttitlelong, std.tfttitleshort, std.tfactionstatus, std.tftfID
+        join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
+        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelong like concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelong like concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelong like concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelong like concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelong like concat('%', mve.videoencode, '%')
+        group by std.tfttitlelong, std.tfttitleshort, std.tftpublishdate, std.tfasactionstatus, std.tftfID
       )
 
       -- Select records
       select
-      td.tfttitlelong,
-      td.tfttitleshort,
-      td.tftpublishdate,
-      td.tfactionstatus,
+      td.titlelong,
+      td.titleshort,
+      cast(td.publishdate as timestamp),
+      case
+        when td.actionstatus is null
+          then
+            0
+        else
+          td.actionstatus
+      end,
       cast(current_timestamp as timestamp),
       cast(current_timestamp as timestamp)
       from tvDetails td
-      left join TVFeed tf on tf.titlelong = td.tfttitlelong
-      where
-      tf.titlelong is null
-      group by td.tfttitlelong, td.tfttitleshort, td.tftpublishdate, td.tfactionstatus;
+      left join TVFeed tf on tf.tfID = td.tfID
+      group by td.titlelong, td.titleshort, td.publishdate, td.actionstatus;
 
       -- Select message
       select
