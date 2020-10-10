@@ -1,5 +1,5 @@
 -- Database Connect
-use media;
+use <databasename>;
 
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
