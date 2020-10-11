@@ -4,7 +4,7 @@
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
 --     Created: 08/26/2020
---     Updated: 10/10/2020
+--     Updated: 10/11/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Media Feed
@@ -206,22 +206,22 @@ as $$
         smd.mfmfID as mfID
         from subMovieDetails smd
         join filteredMovieDetails fmd on fmd.titlelong = smd.mfttitlelong and fmd.publishdate = smd.mftpublishdate
-        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelong like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelong like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelong like concat('%', mve.videoencode, '%')
+        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mve.videoencode, '%')
         where
         (
           (
-            yearString like '%|%' and
+            yearString ilike '%|%' and
             (
-              smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%') or
-              smd.mfttitlelong like concat('%', substring(yearString, 6, 9), '%')
+              smd.mfttitlelong ilike concat('%', substring(yearString, 1, 4), '%') or
+              smd.mfttitlelong ilike concat('%', substring(yearString, 6, 9), '%')
             )
           ) or
           (
-            smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%')
+            smd.mfttitlelong ilike concat('%', substring(yearString, 1, 4), '%')
           )
         )
         group by smd.mfttitlelong, smd.mfttitleshort, smd.mftpublishdate, smd.mfasactionstatus, smd.mfmfID
@@ -296,11 +296,11 @@ as $$
         std.tftfID as tfID
         from subTVDetails std
         join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
-        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelong like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelong like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelong like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelong like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelong like concat('%', mve.videoencode, '%')
+        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mve.videoencode, '%')
         group by std.tfttitlelong, std.tfttitleshort, std.tftpublishdate, std.tfasactionstatus, std.tftfID
       )
 
@@ -389,22 +389,22 @@ as $$
         smd.mfmfID as mfID
         from subMovieDetails smd
         join filteredMovieDetails fmd on fmd.titlelong = smd.mfttitlelong and fmd.publishdate = smd.mftpublishdate
-        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelong like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelong like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelong like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelong like concat('%', mve.videoencode, '%')
+        join MediaAudioEncode mae on mae.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.movieInclude in ('1') and smd.mfttitlelong ilike concat('%', mve.videoencode, '%')
         where
         (
           (
-            yearString like '%|%' and
+            yearString ilike '%|%' and
             (
-              smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%') or
-              smd.mfttitlelong like concat('%', substring(yearString, 6, 9), '%')
+              smd.mfttitlelong ilike concat('%', substring(yearString, 1, 4), '%') or
+              smd.mfttitlelong ilike concat('%', substring(yearString, 6, 9), '%')
             )
           ) or
           (
-            smd.mfttitlelong like concat('%', substring(yearString, 1, 4), '%')
+            smd.mfttitlelong ilike concat('%', substring(yearString, 1, 4), '%')
           )
         )
         group by smd.mfttitlelong, smd.mfttitleshort, smd.mftpublishdate, smd.mfasactionstatus, smd.mfmfID
@@ -494,11 +494,11 @@ as $$
         std.tftfID as tfID
         from subTVDetails std
         join filteredTVDetails ftd on ftd.titlelong = std.tfttitlelong and ftd.publishdate = std.tftpublishdate
-        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelong like concat('%', mae.audioencode, '%')
-        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelong like concat('%', mdr.dynamicrange, '%')
-        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelong like concat('%', mr.resolution, '%')
-        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelong like concat('%', mss.streamsource, '%')
-        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelong like concat('%', mve.videoencode, '%')
+        join MediaAudioEncode mae on mae.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mae.audioencode, '%')
+        left join MediaDynamicRange mdr on mdr.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mdr.dynamicrange, '%')
+        join MediaResolution mr on mr.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mr.resolution, '%')
+        left join MediaStreamSource mss on mss.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mss.streamsource, '%')
+        join MediaVideoEncode mve on mve.tvInclude in ('1') and std.tfttitlelong ilike concat('%', mve.videoencode, '%')
         group by std.tfttitlelong, std.tfttitleshort, std.tftpublishdate, std.tfasactionstatus, std.tftfID
       )
 
