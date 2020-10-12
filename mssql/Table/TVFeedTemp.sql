@@ -16,9 +16,9 @@ go
 
 -- Table Create
 create table [dbo].[TVFeedTemp](
-  [titlelong] [nvarchar](255) null,
-  [titleshort] [nvarchar](255) null,
-  [publish_date] [nvarchar](255) null,
+  [titlelong] [nvarchar](max) null,
+  [titleshort] [nvarchar](max) null,
+  [publish_date] [nvarchar](max) null,
   [created_date] [datetime2](6) null
 ) on [primary]
 go
