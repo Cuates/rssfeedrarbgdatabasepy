@@ -4,7 +4,7 @@
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
 --     Created: 08/26/2020
---     Updated: 10/11/2020
+--     Updated: 10/12/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Media Feed
@@ -452,8 +452,8 @@ as $$
         left join TVFeed tfas on tfas.titleshort = tft.titleshort
         where
         (
-          tf.actionstatus not in (1) or
-          tf.actionstatus is null
+          tfas.actionstatus not in (1) or
+          tfas.actionstatus is null
         ) and
         tf.tfID is null and
         (
