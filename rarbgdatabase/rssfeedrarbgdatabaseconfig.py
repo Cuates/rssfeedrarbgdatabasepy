@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgdatabaseconfig.py
 #     Created: 08/28/2020
-#     Updated: 09/27/2020
+#     Updated: 10/13/2020
 #  Programmer: Cuates
 #  Updated By: Cuates
 #     Purpose: RSS feed Rarbg database Configuration
@@ -26,6 +26,7 @@ class RssFeedRarBgDatabaseConfig:
   _pathLevelTwo = None
   _filenameMedia = None
   _driver = None
+  _databasedialect = None
   _serverName = None
   _port = None
   _database = None
@@ -47,41 +48,21 @@ class RssFeedRarBgDatabaseConfig:
 
     # Set production database information where server info does not consist of server type
     if not regEx.search(r'\b' + "|".join(ServerType) + r'\b', ServerInfo, flags=regEx.IGNORECASE):
-      # Check if type is SQLite
-      if type == 'SQLiteRarBG':
+      # Check if type is MariaDB
+      if type == 'OptionInConfig':
         # Set variables
-        self._driver = 'sqlite:///'
-        self._servername = ''
-        self._port = ''
-        self._pathParent = '/<path>/resource'
-        self._pathLevelOne = '/database'
-        self._pathLevelTwo = ''
-        self._filenameMedia = ''
-        # self._pathDB = '/RSSFeedMedia.sqlite3'
-        self._pathDB = '/RssMediaListTest.sqlite3'
-        self._database = self._pathParent  + self._pathLevelOne + self._pathLevelTwo + self._pathDB
-        self._username = ''
-        self._password = ''
-        self._mainURL = ''
-        self._rssURL = ''
-        self._rssLimit = ''
-        self._categoryURL = ''
-        self._torrentSearchURL = ''
-        self._searchEntryURL = ''
-      # Else check if type is MySQL
-      elif type == 'MySQLRarBG':
-        # Set variables
-        self._driver = 'driver'
-        self._servername = 'servername'
-        self._port = 'port'
+        self._driver = 'MariaDB'
+        self._databasedialect = 'mysql://'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
         self._pathParent = ''
         self._pathLevelOne = ''
         self._pathLevelTwo = ''
         self._filenameMedia = ''
         self._pathDB = ''
-        self._database = 'database'
-        self._username = 'username'
-        self._password = 'password'
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
         self._mainURL = ''
         self._rssURL = ''
         self._rssLimit = ''
@@ -89,39 +70,62 @@ class RssFeedRarBgDatabaseConfig:
         self._torrentSearchURL = ''
         self._searchEntryURL = ''
       # Else check if type is PGSQL
-      elif type == 'PGSQLRarBG':
+      elif type == 'OptionInConfig':
         # Set variables
-        self._driver = 'driver'
-        self._servername = 'servername'
-        self._port = 'port'
+        self._driver = 'PostgreSQL'
+        self._databasedialect = 'postgresql://'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
         self._pathParent = ''
         self._pathLevelOne = ''
         self._pathLevelTwo = ''
         self._filenameMedia = ''
         self._pathDB = ''
-        self._database = 'database'
-        self._username = 'username'
-        self._password = 'password'
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
         self._mainURL = ''
         self._rssURL = ''
         self._rssLimit = ''
         self._categoryURL = ''
         self._torrentSearchURL = ''
         self._searchEntryURL = ''
-      # Else check if type is FreeTDS
-      elif type == 'FreeTDSRarBG':
+      # Else check if type is RarBG Movie MSSQL Linux
+      elif type == 'OptionInConfig':
         # Set variables
-        self._driver = 'driver'
-        self._servername = 'servername'
-        self._port = 'port'
+        self._driver = 'ODBC Driver 17 for SQL Server'
+        self._databasedialect = 'mssql+pyodbc:///'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
         self._pathParent = ''
         self._pathLevelOne = ''
         self._pathLevelTwo = ''
         self._filenameMedia = ''
         self._pathDB = ''
-        self._database = 'database'
-        self._username = 'username'
-        self._password = 'password'
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
+        self._mainURL = ''
+        self._rssURL = ''
+        self._rssLimit = ''
+        self._categoryURL = ''
+        self._torrentSearchURL = ''
+        self._searchEntryURL = ''
+      # Else check if type is MSSQL Windows
+      elif type == 'OptionInConfig':
+        # Set variables
+        self._driver = 'ODBC Driver 17 for SQL Server'
+        self._databasedialect = 'mssql+pyodbc:///'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
+        self._pathParent = ''
+        self._pathLevelOne = ''
+        self._pathLevelTwo = ''
+        self._filenameMedia = ''
+        self._pathDB = ''
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
         self._mainURL = ''
         self._rssURL = ''
         self._rssLimit = ''
@@ -129,9 +133,10 @@ class RssFeedRarBgDatabaseConfig:
         self._torrentSearchURL = ''
         self._searchEntryURL = ''
       # Else check if type is RarBG Movie
-      elif type == 'RarBGMovie':
+      elif type == 'OptionInConfig':
         # Set variables
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
         self._pathParent = ''
@@ -142,16 +147,17 @@ class RssFeedRarBgDatabaseConfig:
         self._database = ''
         self._username = ''
         self._password = ''
-        self._mainURL = 'URL'
-        self._rssURL = 'rssURL?'
+        self._mainURL = 'URL_News'
+        self._rssURL = 'rssURLNews.json?'
         self._rssLimit = ''
-        self._categoryURL = 'categoryURL'
+        self._categoryURL = 'category=#'
         self._torrentSearchURL = 'searchURL?'
         self._searchEntryURL = '&search='
       # Else check if type is RarBG Television
-      elif type == 'RarBGTV':
+      elif type == 'OptionInConfig':
         # Set variables
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
         self._pathParent = ''
@@ -162,22 +168,23 @@ class RssFeedRarBgDatabaseConfig:
         self._database = ''
         self._username = ''
         self._password = ''
-        self._mainURL = 'URL'
-        self._rssURL = 'rssURL?'
+        self._mainURL = 'URL_News'
+        self._rssURL = 'rssURLNews.json?'
         self._rssLimit = ''
-        self._categoryURL = 'categoryURL'
+        self._categoryURL = 'category=41;49'
         self._torrentSearchURL = 'searchURL?'
         self._searchEntryURL = '&search='
       # Else check if type is log media
       elif type == 'LogMedia':
         # Set variables
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
-        self._pathParent = '/<path>/resource'
+        self._pathParent = '/path/to/log/file'
         self._pathLevelOne = '/log'
         self._pathLevelTwo = ''
-        self._filenameMedia = '/rssrarbgdatabasepy.log'
+        self._filenameMedia = '/logfile.log'
         self._pathDB = ''
         self._database = ''
         self._username = ''
@@ -191,6 +198,7 @@ class RssFeedRarBgDatabaseConfig:
       # Else
       else:
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
         self._pathParent = ''
@@ -209,41 +217,21 @@ class RssFeedRarBgDatabaseConfig:
         self._searchEntryURL = ''
     else:
       # Else set development database information
-      # Check if type is SQLite
-      if type == 'SQLiteRarBG':
+      # Check if type is MariaDB
+      if type == 'OptionInConfig':
         # Set variables
-        self._driver = 'sqlite:///'
-        self._servername = ''
-        self._port = ''
-        self._pathParent = '/<path>/resource'
-        self._pathLevelOne = '/database'
-        self._pathLevelTwo = ''
-        self._filenameMedia = ''
-        # self._pathDB = '/RSSFeedMedia.sqlite3'
-        self._pathDB = '/RssMediaListTest.sqlite3'
-        self._database = self._driver + self._pathParent  + self._pathLevelOne + self._pathLevelTwo + self._pathDB
-        self._username = ''
-        self._password = ''
-        self._mainURL = ''
-        self._rssURL = ''
-        self._rssLimit = ''
-        self._categoryURL = ''
-        self._torrentSearchURL = ''
-        self._searchEntryURL = ''
-      # Else check if type is MySQL
-      elif type == 'MySQLRarBG':
-        # Set variables
-        self._driver = 'driver'
-        self._servername = 'servername'
-        self._port = 'port'
+        self._driver = 'MariaDB'
+        self._databasedialect = 'mysql://'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
         self._pathParent = ''
         self._pathLevelOne = ''
         self._pathLevelTwo = ''
         self._filenameMedia = ''
         self._pathDB = ''
-        self._database = 'database'
-        self._username = 'username'
-        self._password = 'password'
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
         self._mainURL = ''
         self._rssURL = ''
         self._rssLimit = ''
@@ -251,39 +239,62 @@ class RssFeedRarBgDatabaseConfig:
         self._torrentSearchURL = ''
         self._searchEntryURL = ''
       # Else check if type is PGSQL
-      elif type == 'PGSQLRarBG':
+      elif type == 'OptionInConfig':
         # Set variables
-        self._driver = 'driver'
-        self._servername = 'servername'
-        self._port = 'port'
+        self._driver = 'PostgreSQL'
+        self._databasedialect = 'postgresql://'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
         self._pathParent = ''
         self._pathLevelOne = ''
         self._pathLevelTwo = ''
         self._filenameMedia = ''
         self._pathDB = ''
-        self._database = 'database'
-        self._username = 'username'
-        self._password = 'password'
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
         self._mainURL = ''
         self._rssURL = ''
         self._rssLimit = ''
         self._categoryURL = ''
         self._torrentSearchURL = ''
         self._searchEntryURL = ''
-      # Else check if type is FreeTDS
-      elif type == 'FreeTDSRarBG':
+      # Else check if type is RarBG Movie MSSQL Linux
+      elif type == 'OptionInConfig':
         # Set variables
-        self._driver = 'driver'
-        self._servername = 'cuateswsql'
-        self._port = 'port'
+        self._driver = 'ODBC Driver 17 for SQL Server'
+        self._databasedialect = 'mssql+pyodbc:///'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
         self._pathParent = ''
         self._pathLevelOne = ''
         self._pathLevelTwo = ''
         self._filenameMedia = ''
         self._pathDB = ''
-        self._database = 'database'
-        self._username = 'username'
-        self._password = 'password'
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
+        self._mainURL = ''
+        self._rssURL = ''
+        self._rssLimit = ''
+        self._categoryURL = ''
+        self._torrentSearchURL = ''
+        self._searchEntryURL = ''
+      # Else check if type is MSSQL Windows
+      elif type == 'OptionInConfig':
+        # Set variables
+        self._driver = 'ODBC Driver 17 for SQL Server'
+        self._databasedialect = 'mssql+pyodbc:///'
+        self._servername = '<IP_Address_ServerName>'
+        self._port = '<Port>'
+        self._pathParent = ''
+        self._pathLevelOne = ''
+        self._pathLevelTwo = ''
+        self._filenameMedia = ''
+        self._pathDB = ''
+        self._database = '<Database>'
+        self._username = '<Username>'
+        self._password = '<Password>'
         self._mainURL = ''
         self._rssURL = ''
         self._rssLimit = ''
@@ -291,9 +302,10 @@ class RssFeedRarBgDatabaseConfig:
         self._torrentSearchURL = ''
         self._searchEntryURL = ''
       # Else check if type is RarBG Movie
-      elif type == 'RarBGMovie':
+      elif type == 'OptionInConfig':
         # Set variables
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
         self._pathParent = ''
@@ -304,16 +316,17 @@ class RssFeedRarBgDatabaseConfig:
         self._database = ''
         self._username = ''
         self._password = ''
-        self._mainURL = 'URL'
-        self._rssURL = 'rssURL?'
+        self._mainURL = 'URL_News'
+        self._rssURL = 'rssURLNews.json?'
         self._rssLimit = ''
-        self._categoryURL = 'categoryURL'
+        self._categoryURL = 'category=#'
         self._torrentSearchURL = 'searchURL?'
         self._searchEntryURL = '&search='
       # Else check if type is RarBG Television
-      elif type == 'RarBGTV':
+      elif type == 'OptionInConfig':
         # Set variables
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
         self._pathParent = ''
@@ -324,22 +337,23 @@ class RssFeedRarBgDatabaseConfig:
         self._database = ''
         self._username = ''
         self._password = ''
-        self._mainURL = 'URL'
-        self._rssURL = 'rssURL?'
+        self._mainURL = 'URL_News'
+        self._rssURL = 'rssURLNews.json?'
         self._rssLimit = ''
-        self._categoryURL = 'categoryURL'
+        self._categoryURL = 'category=41;49'
         self._torrentSearchURL = 'searchURL?'
         self._searchEntryURL = '&search='
       # Else check if type is log media
       elif type == 'LogMedia':
         # Set variables
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
-        self._pathParent = '/<path>/resource'
+        self._pathParent = '/path/to/log/file'
         self._pathLevelOne = '/log'
         self._pathLevelTwo = ''
-        self._filenameMedia = '/rssrarbgdatabasepy.log'
+        self._filenameMedia = '/logfile.log'
         self._pathDB = ''
         self._database = ''
         self._username = ''
@@ -353,6 +367,7 @@ class RssFeedRarBgDatabaseConfig:
       # Else
       else:
         self._driver = ''
+        self._databasedialect = ''
         self._servername = ''
         self._port = ''
         self._pathParent = ''
@@ -372,16 +387,16 @@ class RssFeedRarBgDatabaseConfig:
 
   # Get database variable
   def _getConfigVars(self):
-    return {'Driver': self._driver, 'Servername': self._servername, 'Port': self._port, 'PathParent': self._pathParent, 'PathLevelOne': self._pathLevelOne, 'PathLevelTwo': self._pathLevelTwo, 'PathDB': self._pathDB, 'Database': self._database, 'Username': self._username, 'Password': self._password, 'MainURL': self._mainURL, 'RssURL': self._rssURL, 'RssLimit': self._rssLimit, 'CategoryURL': self._categoryURL, 'TorrentSearchURL': self._torrentSearchURL, 'SearchEntryURL': self._searchEntryURL, 'FilenameMedia': self._filenameMedia}
+    return {'Driver': self._driver, 'DatabaseDialect': self._databasedialect, 'Servername': self._servername, 'Port': self._port, 'PathParent': self._pathParent, 'PathLevelOne': self._pathLevelOne, 'PathLevelTwo': self._pathLevelTwo, 'PathDB': self._pathDB, 'Database': self._database, 'Username': self._username, 'Password': self._password, 'MainURL': self._mainURL, 'RssURL': self._rssURL, 'RssLimit': self._rssLimit, 'CategoryURL': self._categoryURL, 'TorrentSearchURL': self._torrentSearchURL, 'SearchEntryURL': self._searchEntryURL, 'FilenameMedia': self._filenameMedia}
 
   # Set filename variable
   def _setFilenameVars(self, feedAction):
     # Check if media action type is log
     if regEx.search(r'\bLog\b', feedAction, flags=regEx.IGNORECASE):
-      self._pathParent = '/<path>/resource'
+      self._pathParent = '/path/to/log/file'
       self._pathLevelOne = '/log'
       self._pathLevelTwo = ''
-      self._filenameMedia = '/rssrarbgfeedpy.log'
+      self._filenameMedia = '/path/to/default/log_file.log'
     else:
       self._pathParent = ''
       self._pathLevelOne = ''

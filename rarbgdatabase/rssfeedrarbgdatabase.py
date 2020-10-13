@@ -1,11 +1,11 @@
 ##
 #        File: rssfeedrarbgdatabase.py
 #     Created: 08/28/2020
-#     Updated: 09/27/2020
+#     Updated: 10/13/2020
 #  Programmer: Cuates
 #  Updated By: Cuates
 #     Purpose: Retrieve RSS feed from RarBg site
-#     Version: 0.0.1 Python3
+#     Version: 0.0.8 Python3
 ##
 
 # Import modules
@@ -19,14 +19,15 @@ def main():
   # Try to execute the command(s)
   try:
     # Check if modules are installed
-    import feedparser, re, logging, json, datetime, pytz, tzlocal, sqlalchemy, sqlite3, urllib, pathlib#, pythonjsonlogger
+    import feedparser, re, logging, json, datetime, pytz, tzlocal, sqlalchemy, urllib, pathlib, csv, os, traceback
 
     # Declare dictionary list
     feedInfo = []
     feedStorage = []
+    feedStorageNested = {}
 
     # Retrieve movie data from web site
-    feedInfo = rfrbdbclass.extractrssfeed('RarBGMovie')
+    feedInfo = rfrbdbclass.extractrssfeed('OptionInConfig')
     # print(feedInfo)
 
     # Check if list is not empty
@@ -82,62 +83,130 @@ def main():
           rssFeedPublishDateLocalTimeStamp = str(datetime.datetime.strptime(rssFeedPublishDateUTCTimeStamp, '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone(str(local_tz))).strftime('%Y-%m-%d %H:%M:%S'))
 
           # Set dictionary list with values
-          feedStorage.append({'TitleLong': rssFeedTitle, 'TitleShort': rssFeedTitleShort, 'PublishDate': rssFeedPublishDateLocalTimeStamp})
+          feedStorage.append({'Param01': rssFeedTitle, 'Param02': rssFeedTitleShort, 'Param03': rssFeedPublishDateLocalTimeStamp})
 
       # Check if there are any values to process
       if feedStorage:
         # MSSQL BEGIN
+        # Set header row for CSV file
+        movieHeaderColumn = ['Param01', 'Param02', 'Param03']
+
+        # Write data to a CSV file
+        writeCSVFileResp = rfrbdbclass._writeToCSVFile('/path/to/share/drive/Outbound.csv', movieHeaderColumn, feedStorage)
+        # print (writeCSVFileResp)
+
+        # Get current time stamp
+        dateTimeObj = datetime.datetime.now()
+
+        # Convert date time to string
+        timestampStr = dateTimeObj.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+        # Restructure JSON output
+        feedStorageNested = {'movie': {'created_date': timestampStr, 'count': len(feedStorage), 'children': feedStorage}}
+
+        # Write data to a JSON file
+        writeJSONFileResp = rfrbdbclass._writeToJSONFile('/path/to/share/drive/Outbound.json', feedStorageNested)
+        # print (writeJSONFileResp)
+
         # Delete temp movie media only if there are records
-        deleteFreeTDSMovie = rfrbdbclass._deleteTempMovieMedia('FreeTDSRarBG')
+        deleteFreeTDSWMovie = rfrbdbclass._deleteTempMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
-          # splitDeleteFreeTDSMovie = re.split(r'~', deleteFreeTDSMovie)
+          # splitDeleteFreeTDSWMovie = re.split(r'~', deleteFreeTDSWMovie)
 
           # # Check if SError is returned
-          # if splitDeleteFreeTDSMovie[0] == 'SError':
+          # if splitDeleteFreeTDSWMovie[0] == 'SError':
             # # Log string
-            # rnfdbclass._setLogger('Error delete FreeTDSRarBG ' + splitDeleteFreeTDSMovie[1])
+            # rnfdbclass._setLogger('Error delete MSSQLWRarBG ' + splitDeleteFreeTDSWMovie[1])
+            # # print(str(feedInfo))
+
+        # Delete temp movie media only if there are records
+        deleteFreeTDSLMovie = rfrbdbclass._deleteTempMovieMedia('OptionInConfig')
+
+        # # Split at the tilde (~)
+          # splitDeleteFreeTDSLMovie = re.split(r'~', deleteFreeTDSLMovie)
+
+          # # Check if SError is returned
+          # if splitDeleteFreeTDSLMovie[0] == 'SError':
+            # # Log string
+            # rnfdbclass._setLogger('Error delete MSSQLLRarBG ' + splitDeleteFreeTDSLMovie[1])
             # # print(str(feedInfo))
 
         # Insert movie media into temp table
-        insertFreeTDSMovie = rfrbdbclass._insertTempMovieMedia('FreeTDSRarBG', feedStorage)
+        insertFreeTDSWMovie = rfrbdbclass._insertTempMovieMedia('OptionInConfig', feedStorage)
 
         # # Split at the tilde (~)
-          # splitInsertFreeTDSMovie = re.split(r'~', insertFreeTDSMovie)
+          # splitInsertFreeTDSWMovie = re.split(r'~', insertFreeTDSWMovie)
 
           # # Check if SError is returned
-          # if splitInsertFreeTDSMovie[0] == 'SError':
+          # if splitInsertFreeTDSWMovie[0] == 'SError':
             # # Log string
-            # rnfdbclass._setLogger('Error insert FreeTDSRarBG ' + splitInsertFreeTDSMovie[1])
+            # rnfdbclass._setLogger('Error insert MSSQLWRarBG ' + splitInsertFreeTDSWMovie[1])
+            # # print(str(feedInfo))
+
+        # Insert movie media into temp table
+        insertFreeTDSLMovie = rfrbdbclass._insertTempMovieMedia('OptionInConfig', feedStorage)
+
+        # # Split at the tilde (~)
+          # splitInsertFreeTDSLMovie = re.split(r'~', insertFreeTDSLMovie)
+
+          # # Check if SError is returned
+          # if splitInsertFreeTDSLMovie[0] == 'SError':
+            # # Log string
+            # rnfdbclass._setLogger('Error insert MSSQLLRarBG ' + splitInsertFreeTDSLMovie[1])
             # # print(str(feedInfo))
 
         # Bulk update movie media
-        updateBulkFreeTDSMovie = rfrbdbclass._updateBulkMovieMedia('FreeTDSRarBG')
+        updateBulkFreeTDSWMovie = rfrbdbclass._updateBulkMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
-        # splitUpdateBulkFreeTDSMovie = re.split(r'~', updateBulkFreeTDSMovie)
+        # splitUpdateBulkFreeTDSWMovie = re.split(r'~', updateBulkFreeTDSWMovie)
 
         # # Check if SError is returned
-        # if splitUpdateBulkFreeTDSMovie[0] == 'SError':
+        # if splitUpdateBulkFreeTDSWMovie[0] == 'SError':
           # # Log string
-          # rnfdbclass._setLogger('Error update bulk FreeTDSRarBG ' + splitUpdateBulkFreeTDSMovie[1])
+          # rnfdbclass._setLogger('Error update bulk MSSQLWRarBG ' + splitUpdateBulkFreeTDSWMovie[1])
+          # # print(str(feedInfo))
+
+        # Bulk update movie media
+        updateBulkFreeTDSLMovie = rfrbdbclass._updateBulkMovieMedia('OptionInConfig')
+
+        # # Split at the tilde (~)
+        # splitUpdateBulkFreeTDSLMovie = re.split(r'~', updateBulkFreeTDSLMovie)
+
+        # # Check if SError is returned
+        # if splitUpdateBulkFreeTDSLMovie[0] == 'SError':
+          # # Log string
+          # rnfdbclass._setLogger('Error update bulk MSSQLLRarBG ' + splitUpdateBulkFreeTDSLMovie[1])
           # # print(str(feedInfo))
 
         # Bulk insert movie media
-        insertBulkFreeTDSMovie = rfrbdbclass._insertBulkMovieMedia('FreeTDSRarBG')
+        insertBulkFreeTDSWMovie = rfrbdbclass._insertBulkMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
-        # splitInsertBulkFreeTDSMovie = re.split(r'~', insertBulkFreeTDSMovie)
+        # splitInsertBulkFreeTDSWMovie = re.split(r'~', insertBulkFreeTDSWMovie)
 
         # # Check if SError is returned
-        # if splitInsertBulkFreeTDSMovie[0] == 'SError':
+        # if splitInsertBulkFreeTDSWMovie[0] == 'SError':
           # # Log string
-          # rnfdbclass._setLogger('Error insert bulk FreeTDSRarBG ' + splitInsertBulkFreeTDSMovie[1])
+          # rnfdbclass._setLogger('Error insert bulk MSSQLWRarBG ' + splitInsertBulkFreeTDSWMovie[1])
+          # # print(str(feedInfo))
+
+        # Bulk insert movie media
+        insertBulkFreeTDSLMovie = rfrbdbclass._insertBulkMovieMedia('OptionInConfig')
+
+        # # Split at the tilde (~)
+        # splitInsertBulkFreeTDSLMovie = re.split(r'~', insertBulkFreeTDSLMovie)
+
+        # # Check if SError is returned
+        # if splitInsertBulkFreeTDSLMovie[0] == 'SError':
+          # # Log string
+          # rnfdbclass._setLogger('Error insert bulk MSSQLLRarBG ' + splitInsertBulkFreeTDSLMovie[1])
           # # print(str(feedInfo))
         # MSSQL END
         # MySQL BEGIN
         # Delete temp movie only if there are records
-        deleteMySQLMovie = rfrbdbclass._deleteTempMovieMedia('MySQLRarBG')
+        deleteMySQLMovie = rfrbdbclass._deleteTempMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitDeleteMySQLMovie = re.split(r'~', deleteMySQLMovie)
@@ -145,11 +214,11 @@ def main():
         # # Check if SError is returned
         # if splitDeleteMySQLMovie[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error delete MySQLRarBG ' + splitDeleteMySQLMovie[1])
+          # rfrbdbclass._setLogger('Error delete MariaDBSQLRarBG ' + splitDeleteMySQLMovie[1])
           # # print(str(feedInfo))
 
         # Insert movie into temp table
-        insertMySQLMovie = rfrbdbclass._insertTempMovieMedia('MySQLRarBG', feedStorage)
+        insertMySQLMovie = rfrbdbclass._insertTempMovieMedia('OptionInConfig', feedStorage)
 
         # # Split at the tilde (~)
         # splitInsertMySQLMovie = re.split(r'~', insertMySQLMovie)
@@ -157,11 +226,11 @@ def main():
         # # Check if SError is returned
         # if splitInsertMySQLMovie[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error insert MySQLRarBG ' + splitInsertMySQLMovie[1])
+          # rfrbdbclass._setLogger('Error insert MariaDBSQLRarBG ' + splitInsertMySQLMovie[1])
           # # print(str(feedInfo))
 
         # Bulk update movie
-        updateBulkMySQLMovie = rfrbdbclass._updateBulkMovieMedia('MySQLRarBG')
+        updateBulkMySQLMovie = rfrbdbclass._updateBulkMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitUpdateBulkMySQLMovie = re.split(r'~', updateBulkMySQLMovie)
@@ -169,11 +238,11 @@ def main():
         # # Check if SError is returned
         # if splitUpdateBulkMySQLMovie[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error update bulk MySQLRarBG ' + splitUpdateBulkMySQLMovie[1])
+          # rfrbdbclass._setLogger('Error update bulk MariaDBSQLRarBG ' + splitUpdateBulkMySQLMovie[1])
           # # print(str(feedInfo))
 
         # Bulk insert movie
-        insertBulkMySQLMovie = rfrbdbclass._insertBulkMovieMedia('MySQLRarBG')
+        insertBulkMySQLMovie = rfrbdbclass._insertBulkMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitInsertBulkMySQLMovie = re.split(r'~', insertBulkMySQLMovie)
@@ -181,12 +250,12 @@ def main():
         # # Check if SError is returned
         # if splitInsertBulkMySQLMovie[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error insert bulk MySQLRarBG ' + splitInsertBulkMySQLMovie[1])
+          # rfrbdbclass._setLogger('Error insert bulk MariaDBSQLRarBG ' + splitInsertBulkMySQLMovie[1])
           # # print(str(feedInfo))
         # MySQL END
         # PostgreSQL BEGIN
         # Delete temp movie only if there are records
-        deletePostgreSQLMovie = rfrbdbclass._deleteTempMovieMedia('PGSQLRarBG')
+        deletePostgreSQLMovie = rfrbdbclass._deleteTempMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitDeletePostgreSQLMovie = re.split(r'~', deletePostgreSQLMovie)
@@ -198,7 +267,7 @@ def main():
           # # print(str(feedInfo))
 
         # Insert movie into temp table
-        insertPostgreSQLMovie = rfrbdbclass._insertTempMovieMedia('PGSQLRarBG', feedStorage)
+        insertPostgreSQLMovie = rfrbdbclass._insertTempMovieMedia('OptionInConfig', feedStorage)
 
         # # Split at the tilde (~)
         # splitInsertPostgreSQLMovie = re.split(r'~', insertPostgreSQLMovie)
@@ -210,7 +279,7 @@ def main():
           # # print(str(feedInfo))
 
         # Bulk update movie
-        updateBulkPostgreSQLMovie = rfrbdbclass._updateBulkMovieMedia('PGSQLRarBG')
+        updateBulkPostgreSQLMovie = rfrbdbclass._updateBulkMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitUpdateBulkPostgreSQLMovie = re.split(r'~', updateBulkPostgreSQLMovie)
@@ -222,7 +291,7 @@ def main():
           # # print(str(feedInfo))
 
         # Bulk insert movie
-        insertBulkPostgreSQLMovie = rfrbdbclass._insertBulkMovieMedia('PGSQLRarBG')
+        insertBulkPostgreSQLMovie = rfrbdbclass._insertBulkMovieMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitInsertBulkPostgreSQLMovie = re.split(r'~', insertBulkPostgreSQLMovie)
@@ -241,9 +310,10 @@ def main():
     # Set dictionary list
     feedInfo = []
     feedStorage = []
+    feedStorageNested = {}
 
     # Retrieve tv data from web site
-    feedInfo = rfrbdbclass.extractrssfeed('RarBGTV')
+    feedInfo = rfrbdbclass.extractrssfeed('OptionInConfig')
 
     # Check if list is not empty
     if feedInfo:
@@ -281,62 +351,130 @@ def main():
           rssFeedPublishDateLocalTimeStamp = str(datetime.datetime.strptime(rssFeedPublishDateUTCTimeStamp, '%a, %d %b %Y %H:%M:%S %z').astimezone(pytz.timezone(str(local_tz))).strftime('%Y-%m-%d %H:%M:%S'))
 
           # Set dictionary list with values
-          feedStorage.append({'TitleLong': rssFeedTitle, 'TitleShort': rssFeedTitleShort, 'PublishDate': rssFeedPublishDateLocalTimeStamp})
+          feedStorage.append({'Param01': rssFeedTitle, 'Param02': rssFeedTitleShort, 'Param03': rssFeedPublishDateLocalTimeStamp})
 
       # Check if there are any values to process
       if feedStorage:
         # MSSQL BEGIN
+        # Set header row for CSV file
+        tvHeaderColumn = ['Param01', 'Param02', 'Param03']
+
+        # Write data to a CSV file
+        writeCSVFileResp = rfrbdbclass._writeToCSVFile('/path/to/share/drive/Outbound.csv', tvHeaderColumn, feedStorage)
+        # print (writeCSVFileResp)
+
+        # Get current time stamp
+        dateTimeObj = datetime.datetime.now()
+
+        # Convert date time to string
+        timestampStr = dateTimeObj.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+        # Restructure JSON output
+        feedStorageNested = {'tv': {'created_date': timestampStr, 'count': len(feedStorage), 'children': feedStorage}}
+
+        # Write data to a JSON file
+        writeJSONFileResp = rfrbdbclass._writeToJSONFile('/path/to/share/drive/Outbound.json', feedStorageNested)
+        # print (writeJSONFileResp)
+
         # Delete temp tv media only if there are records
-        deleteFreeTDSTV = rfrbdbclass._deleteTempTVMedia('FreeTDSRarBG')
+        deleteFreeTDSWTV = rfrbdbclass._deleteTempTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
-          # splitDeleteFreeTDSTV = re.split(r'~', deleteFreeTDSTV)
+          # splitDeleteFreeTDSWTV = re.split(r'~', deleteFreeTDSWTV)
 
           # # Check if SError is returned
-          # if splitDeleteFreeTDSTV[0] == 'SError':
+          # if splitDeleteFreeTDSWTV[0] == 'SError':
             # # Log string
-            # rnfdbclass._setLogger('Error delete FreeTDSRarBG ' + splitDeleteFreeTDSTV[1])
+            # rnfdbclass._setLogger('Error delete MSSQLWRarBG ' + splitDeleteFreeTDSWTV[1])
+            # # print(str(feedInfo))
+
+        # Delete temp tv media only if there are records
+        deleteFreeTDSLTV = rfrbdbclass._deleteTempTVMedia('OptionInConfig')
+
+        # # Split at the tilde (~)
+          # splitDeleteFreeTDSLTV = re.split(r'~', deleteFreeTDSLTV)
+
+          # # Check if SError is returned
+          # if splitDeleteFreeTDSLTV[0] == 'SError':
+            # # Log string
+            # rnfdbclass._setLogger('Error delete MSSQLLRarBG ' + splitDeleteFreeTDSLTV[1])
             # # print(str(feedInfo))
 
         # Insert tv media into temp table
-        insertFreeTDSTV = rfrbdbclass._insertTempTVMedia('FreeTDSRarBG', feedStorage)
+        insertFreeTDSWTV = rfrbdbclass._insertTempTVMedia('OptionInConfig', feedStorage)
 
         # # Split at the tilde (~)
-          # splitInsertFreeTDSTV = re.split(r'~', insertFreeTDSTV)
+          # splitInsertFreeTDSWTV = re.split(r'~', insertFreeTDSWTV)
 
           # # Check if SError is returned
-          # if splitInsertFreeTDSTV[0] == 'SError':
+          # if splitInsertFreeTDSWTV[0] == 'SError':
             # # Log string
-            # rnfdbclass._setLogger('Error insert FreeTDSRarBG ' + splitInsertFreeTDSTV[1])
+            # rnfdbclass._setLogger('Error insert MSSQLWRarBG ' + splitInsertFreeTDSWTV[1])
+            # # print(str(feedInfo))
+
+        # Insert tv media into temp table
+        insertFreeTDSLTV = rfrbdbclass._insertTempTVMedia('OptionInConfig', feedStorage)
+
+        # # Split at the tilde (~)
+          # splitInsertFreeTDSLTV = re.split(r'~', insertFreeTDSLTV)
+
+          # # Check if SError is returned
+          # if splitInsertFreeTDSLTV[0] == 'SError':
+            # # Log string
+            # rnfdbclass._setLogger('Error insert MSSQLLRarBG ' + splitInsertFreeTDSLTV[1])
             # # print(str(feedInfo))
 
         # Bulk update tv media
-        updateBulkFreeTDSTV = rfrbdbclass._updateBulkTVMedia('FreeTDSRarBG')
+        updateBulkFreeTDSWTV = rfrbdbclass._updateBulkTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
-        # splitUpdateBulkFreeTDSTV = re.split(r'~', updateBulkFreeTDSTV)
+        # splitUpdateBulkFreeTDSWTV = re.split(r'~', updateBulkFreeTDSWTV)
 
         # # Check if SError is returned
-        # if splitUpdateBulkFreeTDSTV[0] == 'SError':
+        # if splitUpdateBulkFreeTDSWTV[0] == 'SError':
           # # Log string
-          # rnfdbclass._setLogger('Error update bulk FreeTDSRarBG ' + splitUpdateBulkFreeTDSTV[1])
+          # rnfdbclass._setLogger('Error update bulk MSSQLWRarBG ' + splitUpdateBulkFreeTDSWTV[1])
+          # # print(str(feedInfo))
+
+        # Bulk update tv media
+        updateBulkFreeTDSLTV = rfrbdbclass._updateBulkTVMedia('OptionInConfig')
+
+        # # Split at the tilde (~)
+        # splitUpdateBulkFreeTDSLTV = re.split(r'~', updateBulkFreeTDSLTV)
+
+        # # Check if SError is returned
+        # if splitUpdateBulkFreeTDSLTV[0] == 'SError':
+          # # Log string
+          # rnfdbclass._setLogger('Error update bulk MSSQLLRarBG ' + splitUpdateBulkFreeTDSLTV[1])
           # # print(str(feedInfo))
 
         # Bulk insert tv media
-        insertBulkFreeTDSTV = rfrbdbclass._insertBulkTVMedia('FreeTDSRarBG')
+        insertBulkFreeTDSWTV = rfrbdbclass._insertBulkTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
-        # splitInsertBulkFreeTDSTV = re.split(r'~', insertBulkFreeTDSTV)
+        # splitInsertBulkFreeTDSWTV = re.split(r'~', insertBulkFreeTDSWTV)
 
         # # Check if SError is returned
-        # if splitInsertBulkFreeTDSTV[0] == 'SError':
+        # if splitInsertBulkFreeTDSWTV[0] == 'SError':
           # # Log string
-          # rnfdbclass._setLogger('Error insert bulk FreeTDSRarBG ' + splitInsertBulkFreeTDSTV[1])
+          # rnfdbclass._setLogger('Error insert bulk MSSQLWRarBG ' + splitInsertBulkFreeTDSWTV[1])
+          # # print(str(feedInfo))
+
+        # Bulk insert tv media
+        insertBulkFreeTDSLTV = rfrbdbclass._insertBulkTVMedia('OptionInConfig')
+
+        # # Split at the tilde (~)
+        # splitInsertBulkFreeTDSLTV = re.split(r'~', insertBulkFreeTDSLTV)
+
+        # # Check if SError is returned
+        # if splitInsertBulkFreeTDSLTV[0] == 'SError':
+          # # Log string
+          # rnfdbclass._setLogger('Error insert bulk MSSQLLRarBG ' + splitInsertBulkFreeTDSLTV[1])
           # # print(str(feedInfo))
         # MSSQL END
         # MySQL BEGIN
         # Delete temp tv only if there are records
-        deleteMySQLTV = rfrbdbclass._deleteTempTVMedia('MySQLRarBG')
+        deleteMySQLTV = rfrbdbclass._deleteTempTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitDeleteMySQLTV = re.split(r'~', deleteMySQLTV)
@@ -344,11 +482,11 @@ def main():
         # # Check if SError is returned
         # if splitDeleteMySQLTV[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error delete MySQLRarBG ' + splitDeleteMySQLTV[1])
+          # rfrbdbclass._setLogger('Error delete MariaDBSQLRarBG ' + splitDeleteMySQLTV[1])
           # # print(str(feedInfo))
 
         # Insert tv into temp table
-        insertMySQLTV = rfrbdbclass._insertTempTVMedia('MySQLRarBG', feedStorage)
+        insertMySQLTV = rfrbdbclass._insertTempTVMedia('OptionInConfig', feedStorage)
 
         # # Split at the tilde (~)
         # splitInsertMySQLTV = re.split(r'~', insertMySQLTV)
@@ -356,11 +494,11 @@ def main():
         # # Check if SError is returned
         # if splitInsertMySQLTV[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error insert MySQLRarBG ' + splitInsertMySQLTV[1])
+          # rfrbdbclass._setLogger('Error insert MariaDBSQLRarBG ' + splitInsertMySQLTV[1])
           # # print(str(feedInfo))
 
         # Bulk update tv
-        updateBulkMySQLTV = rfrbdbclass._updateBulkTVMedia('MySQLRarBG')
+        updateBulkMySQLTV = rfrbdbclass._updateBulkTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitUpdateBulkMySQLTV = re.split(r'~', updateBulkMySQLTV)
@@ -368,11 +506,11 @@ def main():
         # # Check if SError is returned
         # if splitUpdateBulkMySQLTV[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error update bulk MySQLRarBG ' + splitUpdateBulkMySQLTV[1])
+          # rfrbdbclass._setLogger('Error update bulk MariaDBSQLRarBG ' + splitUpdateBulkMySQLTV[1])
           # # print(str(feedInfo))
 
         # Bulk insert tv
-        insertBulkMySQLTV = rfrbdbclass._insertBulkTVMedia('MySQLRarBG')
+        insertBulkMySQLTV = rfrbdbclass._insertBulkTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitInsertBulkMySQLTV = re.split(r'~', insertBulkMySQLTV)
@@ -380,12 +518,12 @@ def main():
         # # Check if SError is returned
         # if splitInsertBulkMySQLTV[0] == 'SError':
           # # Log string
-          # rfrbdbclass._setLogger('Error insert bulk MySQLRarBG ' + splitInsertBulkMySQLTV[1])
+          # rfrbdbclass._setLogger('Error insert bulk MariaDBSQLRarBG ' + splitInsertBulkMySQLTV[1])
           # # print(str(feedInfo))
         # MySQL END
         # PostgreSQL BEGIN
         # Delete temp tv only if there are records
-        deletePostgreSQLTV = rfrbdbclass._deleteTempTVMedia('PGSQLRarBG')
+        deletePostgreSQLTV = rfrbdbclass._deleteTempTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitDeletePostgreSQLTV = re.split(r'~', deletePostgreSQLTV)
@@ -397,7 +535,7 @@ def main():
           # # print(str(feedInfo))
 
         # Insert tv into temp table
-        insertPostgreSQLTV = rfrbdbclass._insertTempTVMedia('PGSQLRarBG', feedStorage)
+        insertPostgreSQLTV = rfrbdbclass._insertTempTVMedia('OptionInConfig', feedStorage)
 
         # # Split at the tilde (~)
         # splitInsertPostgreSQLTV = re.split(r'~', insertPostgreSQLTV)
@@ -409,7 +547,7 @@ def main():
           # # print(str(feedInfo))
 
         # Bulk update tv
-        updateBulkPostgreSQLTV = rfrbdbclass._updateBulkTVMedia('PGSQLRarBG')
+        updateBulkPostgreSQLTV = rfrbdbclass._updateBulkTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitUpdateBulkPostgreSQLTV = re.split(r'~', updateBulkPostgreSQLTV)
@@ -421,7 +559,7 @@ def main():
           # # print(str(feedInfo))
 
         # Bulk insert tv
-        insertBulkPostgreSQLTV = rfrbdbclass._insertBulkTVMedia('PGSQLRarBG')
+        insertBulkPostgreSQLTV = rfrbdbclass._insertBulkTVMedia('OptionInConfig')
 
         # # Split at the tilde (~)
         # splitInsertBulkPostgreSQLTV = re.split(r'~', insertBulkPostgreSQLTV)
