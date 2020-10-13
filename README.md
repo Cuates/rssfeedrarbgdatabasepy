@@ -37,6 +37,3 @@
 * SQLAlchemy
   * `pip3.9 install sqlalchemy`
     * [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
-
-### Dependent MSSQL Function
-* [Omit Characters](https://github.com/Cuates/omitcharactersmssql)
