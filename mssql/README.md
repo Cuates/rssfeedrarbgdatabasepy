@@ -44,8 +44,8 @@
 ### Stored Procedure Usage
 * `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'deleteTempMovie'`
 * `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'deleteTempTV'`
-* `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'insertTempMovie'`, @titleLong = 'titleLongValue', @titleShort = 'titleShortValue', @publishDate = '2020-10-13 00:00:00'
-* `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'insertTempTV'`, @titleLong = 'titleLongValue', @titleShort = 'titleShortValue', @publishDate = '2020-10-13 00:00:00'
+* `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'insertTempMovie', @titleLong = 'titleLongValue', @titleShort = 'titleShortValue', @publishDate = '2020-10-13 00:00:00'`
+* `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'insertTempTV', @titleLong = 'titleLongValue', @titleShort = 'titleShortValue', @publishDate = '2020-10-13 00:00:00'`
 * `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'updateBulkMovie'`
 * `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'updateBulkTV'`
 * `exec dbo.insertupdatedeleteMediaFeed @optionMode = 'insertBulkMovie'`
