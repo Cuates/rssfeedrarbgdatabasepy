@@ -3,7 +3,6 @@
 
 ## Table of Contents
 * [Important Note](#important-note)
-* [Dependent MSSQL Function](#dependent-mssql-function)
 * [Prerequisite Data Types](#prerequisite-data-types)
 * [Prerequisite Functions](#prerequisite-functions)
 * [Prerequisite Conditions](#prerequisite-conditions)
