@@ -4,7 +4,7 @@ use <databasename>;
 -- ============================================
 --        File: insertupdatedeleteMediaFeed
 --     Created: 08/26/2020
---     Updated: 10/10/2020
+--     Updated: 10/13/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Media Feed
@@ -205,10 +205,10 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
       (
         -- Select unique records
         select
-        smd.mfttitlelong as `titlelong`,
+        substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as `titlelong`,
         max(smd.mftpublishdate) as `publishdate`
         from subMovieDetails smd
-        group by smd.mfttitlelong
+        group by substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255)
       ),
       movieDetails as
       (
@@ -318,10 +318,10 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
       (
         -- Select unique records
         select
-        std.tfttitlelong as `titlelong`,
+        substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as `titlelong`,
         max(std.tftpublishdate) as `publishdate`
         from subTVDetails std
-        group by std.tfttitlelong
+        group by substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255)
       ),
       tvDetails as
       (
@@ -413,10 +413,10 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
       (
         -- Select unique records
         select
-        smd.mfttitlelong as `titlelong`,
+        substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as `titlelong`,
         max(smd.mftpublishdate) as `publishdate`
         from subMovieDetails smd
-        group by smd.mfttitlelong
+        group by substring(trim(regexp_replace(regexp_replace(smd.mfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255)
       ),
       movieDetails as
       (
@@ -512,10 +512,10 @@ create procedure `insertupdatedeleteMediaFeed`(in optionMode text, in titlelong 
       (
         -- Select unique records
         select
-        std.tfttitlelong as `titlelong`,
+        substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255) as `titlelong`,
         max(std.tftpublishdate) as `publishdate`
         from subTVDetails std
-        group by std.tfttitlelong
+        group by substring(trim(regexp_replace(regexp_replace(std.tfttitlelong, omitTitleLong, ' '), '[ ]{2,}', ' ')), 1, 255)
       ),
       tvDetails as
       (
