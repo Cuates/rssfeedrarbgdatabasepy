@@ -18,7 +18,6 @@ import datetime # datetime
 import pytz # pytz
 import tzlocal # tz local
 import sqlalchemy # sqlalchemy
-from sqlalchemy import event # sqlalchemy event
 import urllib # urllib
 import pathlib # path
 import csv # csv
