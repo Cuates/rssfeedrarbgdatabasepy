@@ -23,10 +23,10 @@ create procedure `insertupdatedeleteBulkMediaFeed`(in optionMode text, in titlel
     declare omitTitleLong varchar(255);
     declare omitTitleShort varchar(255);
     declare omitPublishDate varchar(255);
-		declare maxLengthOptionMode int;
-		declare maxLengthTitleLong int;
-		declare maxLengthTitleShort int;
-		declare maxLengthPublishDate int;
+    declare maxLengthOptionMode int;
+    declare maxLengthTitleLong int;
+    declare maxLengthTitleShort int;
+    declare maxLengthPublishDate int;
 
     -- Set variable
     set yearString = '';
@@ -34,10 +34,10 @@ create procedure `insertupdatedeleteBulkMediaFeed`(in optionMode text, in titlel
     set omitTitleLong = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitTitleShort = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitPublishDate = '[^0-9\-: ]';
-		set maxLengthOptionMode = 255;
-		set maxLengthTitleLong = 255;
-		set maxLengthTitleShort = 255;
-		set maxLengthPublishDate = 255;
+    set maxLengthOptionMode = 255;
+    set maxLengthTitleLong = 255;
+    set maxLengthTitleShort = 255;
+    set maxLengthPublishDate = 255;
 
     -- Check if parameter is not null
     if optionMode is not null then
@@ -222,7 +222,7 @@ create procedure `insertupdatedeleteBulkMediaFeed`(in optionMode text, in titlel
         join MediaVideoEncode mve on mve.movieInclude in (1) and smd.titlelong like concat('%', mve.videoencode, '%')
         inner join (select smdii.titlelong, max(smdii.publish_date) as publish_date from subMovieDetails smdii group by smdii.titlelong) as smdi on smdi.titlelong = smd.titlelong and smdi.publish_date = smd.publish_date
         where
-				mfas.actionstatus not in (1) and
+        mfas.actionstatus not in (1) and
         mf.mfID is not null and
         (
           (
@@ -324,7 +324,7 @@ create procedure `insertupdatedeleteBulkMediaFeed`(in optionMode text, in titlel
         join MediaVideoEncode mve on mve.tvInclude in (1) and std.titlelong like concat('%', mve.videoencode, '%')
         inner join (select stdii.titlelong, max(stdii.publish_date) as publish_date from subTVDetails stdii group by stdii.titlelong) as stdi on stdi.titlelong = std.titlelong and stdi.publish_date = std.publish_date
         where
-				tfas.actionstatus not in (1) and
+        tfas.actionstatus not in (1) and
         tf.tfID is not null
         group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
       )
@@ -406,7 +406,7 @@ create procedure `insertupdatedeleteBulkMediaFeed`(in optionMode text, in titlel
         join MediaVideoEncode mve on mve.movieInclude in (1) and smd.titlelong like concat('%', mve.videoencode, '%')
         inner join (select smdii.titlelong, max(smdii.publish_date) as publish_date from subMovieDetails smdii group by smdii.titlelong) as smdi on smdi.titlelong = smd.titlelong and smdi.publish_date = smd.publish_date
         where
-				(
+        (
           mfas.actionstatus not in (1) or
           mfas.actionstatus is null
         ) and
@@ -493,7 +493,7 @@ create procedure `insertupdatedeleteBulkMediaFeed`(in optionMode text, in titlel
         join MediaVideoEncode mve on mve.tvInclude in (1) and std.titlelong like concat('%', mve.videoencode, '%')
         inner join (select stdii.titlelong, max(stdii.publish_date) as publish_date from subTVDetails stdii group by stdii.titlelong) as stdi on stdi.titlelong = std.titlelong and stdi.publish_date = std.publish_date
         where
-				(
+        (
           tfas.actionstatus not in (1) or
           tfas.actionstatus is null
         ) and
