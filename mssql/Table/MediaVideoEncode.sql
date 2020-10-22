@@ -18,8 +18,8 @@ go
 create table [dbo].[MediaVideoEncode](
   [mveID] [bigint] identity(1,1) not null,
   [videoencode] [nvarchar](100) not null,
-  [movieInclude] [bit] not null,
-  [tvInclude] [bit] not null,
+  [movieInclude] [tinyint] not null,
+  [tvInclude] [tinyint] not null,
   [created_date] [datetime2](6) not null,
   [modified_date] [datetime2](6) null,
  CONSTRAINT [PK_MediaVideoEncode_videoencode] primary key clustered
