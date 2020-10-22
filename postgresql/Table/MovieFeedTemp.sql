@@ -11,10 +11,10 @@
 -- ============================
 
 -- Table Drop
-drop table if exists MovieFeedTemp;
+drop table if exists moviefeedtemp;
 
 -- Table Create
-create table if not exists MovieFeedTemp(
+create table if not exists moviefeedtemp(
   titlelong citext default null,
   titleshort citext default null,
   publish_date varchar(255) default null,
