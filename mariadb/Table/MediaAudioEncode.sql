@@ -2,7 +2,7 @@
 use <databasename>;
 
 -- ===============================
---        File: MediaAudioEncode
+--        File: mediaaudioencode
 --     Created: 09/07/2020
 --     Updated: 10/22/2020
 --  Programmer: Cuates
@@ -11,10 +11,10 @@ use <databasename>;
 -- ===============================
 
 -- Table Drop
-drop table if exists MediaAudioEncode;
+drop table if exists mediaaudioencode;
 
 -- Table Create
-create table if not exists `MediaAudioEncode`(
+create table if not exists `mediaaudioencode`(
   `maeID` bigint(20) unsigned not null auto_increment,
   `audioencode` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `movieInclude` tinyint unsigned not null default 0,
@@ -22,5 +22,5 @@ create table if not exists `MediaAudioEncode`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`maeID`),
-  unique key `UQIX_MediaAudioEncode_audioencode` (`audioencode`)
+  unique key `UQIX_mediaaudioencode_audioencode` (`audioencode`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
