@@ -4,7 +4,7 @@ use <databasename>;
 -- ================================
 --        File: MediaDynamicRange
 --     Created: 09/07/2020
---     Updated: 09/30/2020
+--     Updated: 10/22/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media dynamic range
