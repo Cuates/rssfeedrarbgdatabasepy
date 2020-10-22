@@ -2,19 +2,19 @@
 \c <databasename>;
 
 -- ============================
---        File: TVFeedTemp
+--        File: tvfeedtemp
 --     Created: 09/07/2020
---     Updated: 10/05/2020
+--     Updated: 10/22/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Movie feed temp
 -- ============================
 
 -- Table Drop
-drop table if exists TVFeedTemp;
+drop table if exists tvfeedtemp;
 
 -- Table Create
-create table if not exists TVFeedTemp(
+create table if not exists tvfeedtemp(
   titlelong citext default null,
   titleshort citext default null,
   publish_date varchar(255) default null,
