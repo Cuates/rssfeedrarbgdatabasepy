@@ -18,6 +18,7 @@ go
 create table [dbo].[MediaStreamSource](
   [mssID] [bigint] identity(1,1) not null,
   [streamsource] [nvarchar](100) not null,
+  [streamdescription] [nvarchar](100) not null,
   [movieInclude] [tinyint] not null,
   [tvInclude] [tinyint] not null,
   [created_date] [datetime2](6) not null,
