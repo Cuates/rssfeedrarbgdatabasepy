@@ -18,8 +18,8 @@ go
 create table [dbo].[MediaStreamSource](
   [mssID] [bigint] identity(1,1) not null,
   [streamsource] [nvarchar](100) not null,
-  [movieInclude] [bit] not null,
-  [tvInclude] [bit] not null,
+  [movieInclude] [tinyint] not null,
+  [tvInclude] [tinyint] not null,
   [created_date] [datetime2](6) not null,
   [modified_date] [datetime2](6) null,
  CONSTRAINT [PK_MediaStreamSource_streamsource] primary key clustered
@@ -30,11 +30,11 @@ create table [dbo].[MediaStreamSource](
 go
 
 -- Contraint Default
-alter table [dbo].[MediaStreamSource] add  default ((0)) for [movieInclude]
+alter table [dbo].[MediaStreamSource] add  default (0) for [movieInclude]
 go
 
 -- Contraint Default
-alter table [dbo].[MediaStreamSource] add  default ((0)) for [tvInclude]
+alter table [dbo].[MediaStreamSource] add  default (0) for [tvInclude]
 go
 
 -- Contraint Default
