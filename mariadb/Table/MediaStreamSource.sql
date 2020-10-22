@@ -2,7 +2,7 @@
 use <databasename>;
 
 -- ================================
---        File: MediaStreamSource
+--        File: mediastreamsource
 --     Created: 09/07/2020
 --     Updated: 10/22/2020
 --  Programmer: Cuates
@@ -11,10 +11,10 @@ use <databasename>;
 -- ================================
 
 -- Table Drop
-drop table if exists MediaStreamSource;
+drop table if exists mediastreamsource;
 
 -- Table Create
-create table if not exists `MediaStreamSource`(
+create table if not exists `mediastreamsource`(
   `mssID` bigint(20) unsigned not null auto_increment,
   `streamsource` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `streamdescription` varchar(255) collate utf8mb4_unicode_520_ci not null,
@@ -23,5 +23,5 @@ create table if not exists `MediaStreamSource`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`mssID`),
-  unique key `UQIX_MediaStreamSource_streamsource` (`streamsource`)
+  unique key `UQIX_mediastreamsource_streamsource` (`streamsource`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
