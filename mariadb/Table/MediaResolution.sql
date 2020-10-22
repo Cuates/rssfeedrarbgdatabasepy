@@ -2,7 +2,7 @@
 use <databasename>;
 
 -- =============================
---        File: MediaResolution
+--        File: mediaresolution
 --     Created: 09/07/2020
 --     Updated: 10/22/2020
 --  Programmer: Cuates
@@ -11,10 +11,10 @@ use <databasename>;
 -- =============================
 
 -- Drop Table
-drop table if exists MediaResolution;
+drop table if exists mediaresolution;
 
 -- Table Create
-create table if not exists `MediaResolution`(
+create table if not exists `mediaresolution`(
   `mrID` bigint(20) unsigned not null auto_increment,
   `resolution` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `movieInclude` tinyint unsigned not null default 0,
@@ -22,5 +22,5 @@ create table if not exists `MediaResolution`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`mrID`),
-  unique key `UQIX_MediaResolution_resolution` (`resolution`)
+  unique key `UQIX_mediaresolution_resolution` (`resolution`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
