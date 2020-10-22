@@ -2,9 +2,9 @@
 \c <databasename>;
 
 -- ============================
---        File: MovieFeedTemp
+--        File: moviefeedtemp
 --     Created: 09/07/2020
---     Updated: 10/05/2020
+--     Updated: 10/22/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Movie feed temp
