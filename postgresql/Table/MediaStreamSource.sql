@@ -2,36 +2,37 @@
 \c <databasename>;
 
 -- ================================
---        File: MediaStreamSource
+--        File: mediastreamsource
 --     Created: 09/07/2020
---     Updated: 10/05/2020
+--     Updated: 10/22/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media stream source
 -- ================================
 
 -- Sequence Drop
-drop sequence if exists MediaStreamSource_mssID_seq;
+drop sequence if exists mediastreamsource_mssID_seq;
 
 -- Sequence Create
-create sequence if not exists MediaStreamSource_mssID_seq;
+create sequence if not exists mediastreamsource_mssID_seq;
 
 -- Table Drop
 drop table if exists MediaStreamSource;
 
 -- Table Create
-create table if not exists MediaStreamSource(
-  mssID bigint not null default nextval('MediaStreamSource_mssID_seq'),
+create table if not exists mediastreamsource(
+  mssID bigint not null default nextval('mediastreamsource_mssID_seq'),
   streamsource citext not null,
+  streamdescription citext not null,
   movieInclude bit(1) not null default b'0',
   tvInclude bit(1) not null default b'0',
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_MediaStreamSource_streamsource primary key (streamsource)
+  constraint PK_mediastreamsource_streamsource primary key (streamsource)
 );
 
 -- Sequence Alter ownership
-alter sequence MediaStreamSource_mssID_seq owned by MediaStreamSource.mssID;
+alter sequence mediastreamsource_mssID_seq owned by mediastreamsource.mssID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence MediaStreamSource_mssID_seq to <username>;
+grant usage, select on sequence mediastreamsource_mssID_seq to <username>;
