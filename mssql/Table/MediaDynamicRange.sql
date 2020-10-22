@@ -18,8 +18,8 @@ go
 create table [dbo].[MediaDynamicRange](
   [mdrID] [bigint] identity(1,1) not null,
   [dynamicrange] [nvarchar](100) not null,
-  [movieInclude] [bit] not null,
-  [tvInclude] [bit] not null,
+  [movieInclude] [tinyint] not null,
+  [tvInclude] [tinyint] not null,
   [created_date] [datetime2](6) not null,
   [modified_date] [datetime2](6) null,
  CONSTRAINT [PK_MediaDynamicRange_dynamicrange] primary key clustered
