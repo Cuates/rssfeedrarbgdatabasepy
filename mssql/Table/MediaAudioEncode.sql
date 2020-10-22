@@ -30,11 +30,11 @@ create table [dbo].[MediaAudioEncode](
 go
 
 -- Contraint Default
-alter table [dbo].[MediaAudioEncode] add  default ((0)) for [movieInclude]
+alter table [dbo].[MediaAudioEncode] add  default (0) for [movieInclude]
 go
 
 -- Contraint Default
-alter table [dbo].[MediaAudioEncode] add  default ((0)) for [tvInclude]
+alter table [dbo].[MediaAudioEncode] add  default (0) for [tvInclude]
 go
 
 -- Contraint Default
