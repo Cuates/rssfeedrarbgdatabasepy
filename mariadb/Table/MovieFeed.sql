@@ -2,7 +2,7 @@
 use <databasename>;
 
 -- =======================
---        File: MovieFeed
+--        File: moviefeed
 --     Created: 09/07/2020
 --     Updated: 10/22/2020
 --  Programmer: Cuates
