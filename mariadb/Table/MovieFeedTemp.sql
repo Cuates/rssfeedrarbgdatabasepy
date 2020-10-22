@@ -2,19 +2,19 @@
 use <databasename>;
 
 -- ============================
---        File: MovieFeedTemp
+--        File: moviefeedtemp
 --     Created: 09/07/2020
---     Updated: 10/13/2020
+--     Updated: 10/22/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Movie feed temp
 -- ============================
 
 -- Table Drop
-drop table if exists MovieFeedTemp;
+drop table if exists moviefeedtemp;
 
 -- Table Create
-create table if not exists `MovieFeedTemp`(
+create table if not exists `moviefeedtemp`(
   `titlelong` text collate utf8mb4_unicode_520_ci default null,
   `titleshort` text collate utf8mb4_unicode_520_ci default null,
   `publish_date` text collate utf8mb4_unicode_520_ci default null,
