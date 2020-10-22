@@ -2,7 +2,7 @@
 use <databasename>;
 
 -- ================================
---        File: MediaDynamicRange
+--        File: mediadynamicrange
 --     Created: 09/07/2020
 --     Updated: 10/22/2020
 --  Programmer: Cuates
@@ -11,10 +11,10 @@ use <databasename>;
 -- ================================
 
 -- Drop Table
-drop table if exists MediaDynamicRange;
+drop table if exists mediadynamicrange;
 
 -- Table Create
-create table if not exists `MediaDynamicRange`(
+create table if not exists `mediadynamicrange`(
   `mdrID` bigint(20) unsigned not null auto_increment,
   `dynamicrange` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `movieInclude` tinyint unsigned not null default 0,
@@ -22,5 +22,5 @@ create table if not exists `MediaDynamicRange`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`mdrID`),
-  unique key `UQIX_MediaDynamicRange_dynamicrange` (`dynamicrange`)
+  unique key `UQIX_mediadynamicrange_dynamicrange` (`dynamicrange`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
