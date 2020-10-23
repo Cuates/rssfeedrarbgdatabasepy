@@ -28,7 +28,7 @@ create table if not exists mediastreamsource(
   tvInclude smallint not null default 0,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_mediastreamsource_streamsource primary key (streamsource)
+  constraint pk_mediastreamsource_streamsource primary key (streamsource)
 );
 
 -- Sequence Alter ownership
