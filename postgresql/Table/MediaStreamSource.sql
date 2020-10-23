@@ -11,13 +11,13 @@
 -- ================================
 
 -- Sequence Drop
-drop sequence if exists mediastreamsource_mssID_seq;
+drop sequence if exists mediastreamsource_mssID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists mediastreamsource_mssID_seq;
 
 -- Table Drop
-drop table if exists MediaStreamSource;
+drop table if exists mediastreamsource;
 
 -- Table Create
 create table if not exists mediastreamsource(
