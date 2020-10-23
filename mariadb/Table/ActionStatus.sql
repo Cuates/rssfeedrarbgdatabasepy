@@ -4,7 +4,7 @@ use <databasename>;
 -- ==========================
 --        File: actionstatus
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Action status
@@ -21,5 +21,5 @@ create table if not exists `actionstatus`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`asID`),
-  unique key `UQIX_actionstatus_actionnumber` (`actionnumber`)
+  unique key `uqix_actionstatus_actionnumber` (`actionnumber`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
