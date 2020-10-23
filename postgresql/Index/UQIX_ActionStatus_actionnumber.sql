@@ -14,4 +14,4 @@
 drop index if exists uqix_actionstatus_actionnumber;
 
 -- Index Create
-create unique index if not exists uqix_actionstatus_actionnumber on actionstatus ((actionnumber));
+create unique index if not exists uqix_actionstatus_actionnumber on actionstatus (actionnumber);
