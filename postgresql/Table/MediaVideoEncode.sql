@@ -27,7 +27,7 @@ create table if not exists mediavideoencode(
   tvInclude smallint not null default 0,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_mediavideoencode_videoencode primary key (videoencode)
+  constraint pk_mediavideoencode_videoencode primary key (videoencode)
 );
 
 -- Sequence Alter ownership
