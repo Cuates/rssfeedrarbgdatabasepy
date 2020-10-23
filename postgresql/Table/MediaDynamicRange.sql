@@ -4,7 +4,7 @@
 -- ================================
 --        File: mediadynamicrange
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media dynamic range
@@ -23,8 +23,8 @@ drop table if exists mediaaudioencode;
 create table if not exists mediadynamicrange(
   mdrID bigint not null default nextval('mediadynamicrange_mdrID_seq'),
   dynamicrange citext not null,
-  movieInclude bit(1) not null default b'0',
-  tvInclude bit(1) not null default b'0',
+  movieInclude smallint not null default 0,
+  tvInclude smallint not null default 0,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
   constraint PK_mediadynamicrange_dynamicrange primary key (dynamicrange)
