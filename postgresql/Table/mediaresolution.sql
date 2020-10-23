@@ -34,4 +34,4 @@ create table if not exists mediaresolution(
 alter sequence mediaresolution_mrID_seq owned by mediaresolution.mrID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence mediaresolution_mrID_seq to <username>;
+grant usage, select on sequence mediaresolution_mrID_seq to <userrolename>;
