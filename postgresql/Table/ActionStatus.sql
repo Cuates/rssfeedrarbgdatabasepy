@@ -4,14 +4,14 @@
 -- ==========================
 --        File: actionstatus
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Action status
 -- ==========================
 
 -- Sequence Drop
-drop sequence if exists actionstatus_asID_seq;
+drop sequence if exists actionstatus_asID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists actionstatus_asID_seq;
