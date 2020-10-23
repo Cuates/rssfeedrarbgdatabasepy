@@ -11,7 +11,7 @@
 -- ===============================
 
 -- Sequence Drop
-drop sequence if exists mediaaudioencode_maeID_seq;
+drop sequence if exists mediaaudioencode_maeID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists mediaaudioencode_maeID_seq;
