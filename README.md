@@ -22,6 +22,10 @@
 * MySQL/MariaDB
   * `pip3.9 install mysqlclient`
     * [MySQL Client](https://pypi.org/project/mysqlclient/)
+    * If "NameError: name '\_mysql' is not defined", then proceed with the following instead
+      * `pip3.9 uninstall mysqlclient`
+      * `pip3.9 install --no-binary mysqlclient mysqlclient`
+        * Note: The first occurrence is the name of the package to apply the no-binary option to, the second specifies the package to install
 * PostgreSQL
   * `pip3.9 install psycopg2-binary`
     * [Psycopg2 Binary](https://pypi.org/project/psycopg2/)
