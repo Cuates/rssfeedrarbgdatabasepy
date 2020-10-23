@@ -11,7 +11,7 @@
 -- ===============================
 
 -- Sequence Drop
-drop sequence if exists mediavideoencode_mveID_seq;
+drop sequence if exists mediavideoencode_mveID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists mediavideoencode_mveID_seq;
