@@ -35,4 +35,4 @@ create table if not exists mediastreamsource(
 alter sequence mediastreamsource_mssID_seq owned by mediastreamsource.mssID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence mediastreamsource_mssID_seq to <username>;
+grant usage, select on sequence mediastreamsource_mssID_seq to <userrolename>;
