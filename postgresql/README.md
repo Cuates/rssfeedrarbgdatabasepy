@@ -37,11 +37,11 @@
 * N/A
 
 ### Stored Procedure Usage
-* `call insertupdatedeleteMediaFeed ('deleteTempMovie', '', '', '', '', '');`
-* `call insertupdatedeleteMediaFeed ('deleteTempTV', '', '', '', '', '');`
-* `call insertupdatedeleteMediaFeed ('insertTempMovie', 'titleLongValue', 'titleShortValue', '2020-10-13 00:00:00');`
-* `call insertupdatedeleteMediaFeed ('insertTempTV', 'titleLongValue', 'titleShortValue', '2020-10-13 00:00:00');`
-* `call insertupdatedeleteMediaFeed ('updateBulkMovie', '', '', '', '', '');`
-* `call insertupdatedeleteMediaFeed ('updateBulkTV', '', '', '', '', '');`
-* `call insertupdatedeleteMediaFeed ('insertBulkMovie', '', '', '', '', '');`
-* `call insertupdatedeleteMediaFeed ('insertBulkTV', '', '', '', '', '');`
+* `call insertupdatedeletebulkmediafeed ('deleteTempMovie', '', '', '', '', '');`
+* `call insertupdatedeletebulkmediafeed ('deleteTempTV', '', '', '', '', '');`
+* `call insertupdatedeletebulkmediafeed ('insertTempMovie', 'titleLongValue', 'titleShortValue', '2020-10-13 00:00:00');`
+* `call insertupdatedeletebulkmediafeed ('insertTempTV', 'titleLongValue', 'titleShortValue', '2020-10-13 00:00:00');`
+* `call insertupdatedeletebulkmediafeed ('updateBulkMovie', '', '', '', '', '');`
+* `call insertupdatedeletebulkmediafeed ('updateBulkTV', '', '', '', '', '');`
+* `call insertupdatedeletebulkmediafeed ('insertBulkMovie', '', '', '', '', '');`
+* `call insertupdatedeletebulkmediafeed ('insertBulkTV', '', '', '', '', '');`
