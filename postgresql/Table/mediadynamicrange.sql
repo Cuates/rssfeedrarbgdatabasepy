@@ -34,4 +34,4 @@ create table if not exists mediadynamicrange(
 alter sequence mediadynamicrange_mdrID_seq owned by mediadynamicrange.mdrID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence mediadynamicrange_mdrID_seq to <username>;
+grant usage, select on sequence mediadynamicrange_mdrID_seq to <userrolename>;
