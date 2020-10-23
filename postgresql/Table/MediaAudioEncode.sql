@@ -27,7 +27,7 @@ create table if not exists mediaaudioencode(
   tvInclude smallint not null default 0,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_mediaaudioencode_audioencode primary key (audioencode)
+  constraint pk_mediaaudioencode_audioencode primary key (audioencode)
 );
 
 -- Sequence Alter ownership
