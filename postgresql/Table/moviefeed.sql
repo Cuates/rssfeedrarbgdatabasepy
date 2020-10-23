@@ -35,4 +35,4 @@ create table if not exists moviefeed(
 alter sequence moviefeed_mfID_seq owned by moviefeed.mfID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence moviefeed_mfID_seq to <username>;
+grant usage, select on sequence moviefeed_mfID_seq to <userrolename>;
