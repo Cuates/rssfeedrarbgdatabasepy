@@ -11,7 +11,7 @@
 -- ================================
 
 -- Sequence Drop
-drop sequence if exists mediadynamicrange_mdrID_seq;
+drop sequence if exists mediadynamicrange_mdrID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists mediadynamicrange_mdrID_seq;
