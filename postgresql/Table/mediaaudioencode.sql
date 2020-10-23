@@ -34,4 +34,4 @@ create table if not exists mediaaudioencode(
 alter sequence mediaaudioencode_maeID_seq owned by mediaaudioencode.maeID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence mediaaudioencode_maeID_seq to <username>;
+grant usage, select on sequence mediaaudioencode_maeID_seq to <userrolename>;
