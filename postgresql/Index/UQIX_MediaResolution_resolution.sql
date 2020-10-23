@@ -2,16 +2,16 @@
 \c <databasename>;
 
 -- =====================================================
---        File: UQIX_MediaResolution_resolution
+--        File: uqix_mediaresolution_resolution
 --     Created: 09/07/2020
---     Updated: 09/27/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Unique index media resolution resolution
 -- =====================================================
 
 -- Index Drop
-drop index if exists UQIX_MediaResolution_resolution;
+drop index if exists uqix_mediaresolution_resolution;
 
 -- Index Create
-create unique index if not exists UQIX_MediaResolution_resolution on MediaResolution ((resolution));
+create unique index if not exists uqix_mediaresolution_resolution on mediaresolution (resolution);
