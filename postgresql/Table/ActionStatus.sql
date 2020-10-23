@@ -26,7 +26,7 @@ create table if not exists actionstatus(
   actiondescription varchar(255) not null,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_actionstatus_actionnumber primary key (actionnumber)
+  constraint pk_actionstatus_actionnumber primary key (actionnumber)
 );
 
 -- Sequence Alter ownership
