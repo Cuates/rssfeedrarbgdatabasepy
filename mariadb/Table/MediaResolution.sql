@@ -4,7 +4,7 @@ use <databasename>;
 -- =============================
 --        File: mediaresolution
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media resolution
@@ -22,5 +22,5 @@ create table if not exists `mediaresolution`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`mrID`),
-  unique key `UQIX_mediaresolution_resolution` (`resolution`)
+  unique key `uqix_mediaresolution_resolution` (`resolution`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
