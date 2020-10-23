@@ -34,4 +34,4 @@ create table if not exists mediavideoencode(
 alter sequence mediavideoencode_mveID_seq owned by mediavideoencode.mveID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence mediavideoencode_mveID_seq to <username>;
+grant usage, select on sequence mediavideoencode_mveID_seq to <userrolename>;
