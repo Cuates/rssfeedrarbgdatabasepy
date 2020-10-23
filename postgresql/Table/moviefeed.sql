@@ -2,12 +2,12 @@
 \c <databasename>;
 
 -- =======================
---        File: MovieFeed
+--        File: moviefeed
 --     Created: 09/07/2020
 --     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
---     Purpose: Movie Feed
+--     Purpose: Movie feed
 -- =======================
 
 -- Sequence Drop
