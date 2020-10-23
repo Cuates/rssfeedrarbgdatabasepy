@@ -4,14 +4,14 @@
 -- =======================
 --        File: tvfeed
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: TV Feed
 -- =======================
 
 -- Sequence Drop
-drop sequence if exists tvfeed_tfID_seq;
+drop sequence if exists tvfeed_tfID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists tvfeed_tfID_seq;
@@ -28,7 +28,7 @@ create table if not exists tvfeed(
   actionstatus int not null,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_tvfeed_titlelong primary key (titlelong)
+  constraint pk_tvfeed_titlelong primary key (titlelong)
 );
 
 -- Sequence Alter ownership
