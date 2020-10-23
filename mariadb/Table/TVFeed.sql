@@ -4,7 +4,7 @@ use <databasename>;
 -- =======================
 --        File: tvfeed
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: TV Feed
@@ -23,6 +23,6 @@ create table if not exists `tvfeed`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`tfID`),
-  unique key `UQIX_tvfeed_titlelong` (`titlelong`),
-  index `IX_tvfeed_titleshort` (`titleshort`)
+  unique key `uqix_tvfeed_titlelong` (`titlelong`),
+  index `ix_tvfeed_titleshort` (`titleshort`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
