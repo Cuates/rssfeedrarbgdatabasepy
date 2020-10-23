@@ -27,7 +27,7 @@ create table if not exists mediadynamicrange(
   tvInclude smallint not null default 0,
   created_date timestamp not null default current_timestamp,
   modified_date timestamp default current_timestamp,
-  constraint PK_mediadynamicrange_dynamicrange primary key (dynamicrange)
+  constraint pk_mediadynamicrange_dynamicrange primary key (dynamicrange)
 );
 
 -- Sequence Alter ownership
