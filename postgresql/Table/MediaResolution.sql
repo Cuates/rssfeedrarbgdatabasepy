@@ -11,13 +11,13 @@
 -- =============================
 
 -- Sequence Drop
-drop sequence if exists mediaresolution_mrID_seq;
+drop sequence if exists mediaresolution_mrID_seq cascade;
 
 -- Sequence Create
 create sequence if not exists mediaresolution_mrID_seq;
 
 -- Drop Table
-drop table if exists mediadynamicrange;
+drop table if exists mediaresolution;
 
 -- Table Create
 create table if not exists mediaresolution(
