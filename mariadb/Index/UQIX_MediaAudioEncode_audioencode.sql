@@ -2,16 +2,16 @@
 use <databasename>;
 
 -- ====================================================
---        File: UQIX_MediaAudioEncode_audioencode
+--        File: uqix_mediaaudioencode_audioencode
 --     Created: 09/07/2020
---     Updated: 09/28/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Unique index action status audio encode
 -- ====================================================
 
 -- Index Drop
-drop index if exists `UQIX_MediaAudioEncode_audioencode` on MediaAudioEncode;
+drop index if exists `uqix_mediaaudioencode_audioencode` on mediaaudioencode;
 
 -- Index Create
-create unique index `UQIX_MediaAudioEncode_audioencode` on MediaAudioEncode (`audioencode`);
+create unique index `uqix_mediaaudioencode_audioencode` on mediaaudioencode (`audioencode`);
