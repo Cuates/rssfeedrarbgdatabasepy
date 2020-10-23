@@ -2,7 +2,7 @@
 \c <databasename>;
 
 -- =====================================================
---        File: UQIX_ActionStatus_actionnumber
+--        File: uqix_actionstatus_actionnumber
 --     Created: 09/07/2020
 --     Updated: 10/23/2020
 --  Programmer: Cuates
