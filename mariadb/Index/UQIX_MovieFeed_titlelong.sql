@@ -2,16 +2,16 @@
 use <databasename>;
 
 -- ========================================
---        File: UQIX_MovieFeed_titlelong
+--        File: uqix_moviefeed_titlelong
 --     Created: 09/07/2020
---     Updated: 09/28/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Index movie feed title long
 -- ========================================
 
 -- Index Drop
-drop index if exists `UQIX_MovieFeed_titlelong` on MovieFeed;
+drop index if exists `uqix_moviefeed_titlelong` on moviefeed;
 
 -- Index Create
-create unique index `UQIX_MovieFeed_titlelong` on MovieFeed (`titlelong`);
+create unique index `uqix_moviefeed_titlelong` on moviefeed (`titlelong`);
