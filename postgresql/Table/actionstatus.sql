@@ -33,4 +33,4 @@ create table if not exists actionstatus(
 alter sequence actionstatus_asID_seq owned by actionstatus.asID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence actionstatus_asID_seq to <username>;
+grant usage, select on sequence actionstatus_asID_seq to <userrolename>;
