@@ -4,7 +4,7 @@ use <databasename>;
 -- ================================
 --        File: mediadynamicrange
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media dynamic range
@@ -22,5 +22,5 @@ create table if not exists `mediadynamicrange`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`mdrID`),
-  unique key `UQIX_mediadynamicrange_dynamicrange` (`dynamicrange`)
+  unique key `uqix_mediadynamicrange_dynamicrange` (`dynamicrange`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
