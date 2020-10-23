@@ -7,7 +7,7 @@
 --     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
---     Purpose: TV Feed
+--     Purpose: TV feed
 -- =======================
 
 -- Sequence Drop
@@ -35,4 +35,4 @@ create table if not exists tvfeed(
 alter sequence tvfeed_tfID_seq owned by tvfeed.tfID;
 
 -- Grant permission to a sequence
-grant usage, select on sequence tvfeed_tfID_seq to <username>;
+grant usage, select on sequence tvfeed_tfID_seq to <userrolename>;
