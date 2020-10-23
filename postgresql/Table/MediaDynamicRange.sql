@@ -17,7 +17,7 @@ drop sequence if exists mediadynamicrange_mdrID_seq;
 create sequence if not exists mediadynamicrange_mdrID_seq;
 
 -- Drop Table
-drop table if exists mediaaudioencode;
+drop table if exists mediadynamicrange;
 
 -- Table Create
 create table if not exists mediadynamicrange(
