@@ -4,7 +4,7 @@ use <databasename>;
 -- ===============================
 --        File: mediaaudioencode
 --     Created: 09/07/2020
---     Updated: 10/22/2020
+--     Updated: 10/23/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Media audio encode
@@ -22,5 +22,5 @@ create table if not exists `mediaaudioencode`(
   `created_date` datetime(6) not null default current_timestamp(6),
   `modified_date` datetime(6) default current_timestamp(6),
   primary key (`maeID`),
-  unique key `UQIX_mediaaudioencode_audioencode` (`audioencode`)
+  unique key `uqix_mediaaudioencode_audioencode` (`audioencode`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
