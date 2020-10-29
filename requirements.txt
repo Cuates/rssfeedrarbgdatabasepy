@@ -1,0 +1,6 @@
+pyodbc
+psycopg2-binary
+feedparser
+pytz
+tzlocal
+sqlalchemy
