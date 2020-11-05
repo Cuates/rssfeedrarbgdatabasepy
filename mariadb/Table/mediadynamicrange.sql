@@ -19,8 +19,8 @@ create table if not exists `mediadynamicrange`(
   `dynamicrange` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `movieInclude` tinyint unsigned not null default 0,
   `tvInclude` tinyint unsigned not null default 0,
-  `created_date` datetime(6) not null default current_timestamp(6),
-  `modified_date` datetime(6) default current_timestamp(6),
+  `created_date` datetime not null default current_timestamp(6),
+  `modified_date` datetime default current_timestamp(6),
   primary key (`mdrID`),
   unique key `uqix_mediadynamicrange_dynamicrange` (`dynamicrange`)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
