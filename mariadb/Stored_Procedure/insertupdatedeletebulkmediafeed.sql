@@ -4,7 +4,7 @@ use <databasename>;
 -- =================================================
 --        File: insertupdatedeletebulkmediafeed
 --     Created: 08/26/2020
---     Updated: 10/22/2020
+--     Updated: 11/05/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert update delete bulk media feed
@@ -15,7 +15,7 @@ drop procedure if exists insertupdatedeletebulkmediafeed;
 
 -- Procedure Create
 delimiter //
-create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlelong text, in titleshort text, in publishDate text)
+create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlelong text, in titleshort text, in publishdate text)
   begin
     -- Declare variable
     declare yearString varchar(255);
@@ -85,23 +85,23 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     end if;
 
     -- Check if parameter is not null
-    if publishDate is not null then
+    if publishdate is not null then
       -- Omit characters, multi space to single space, and trim leading and trailing spaces
-      set publishDate = regexp_replace(regexp_replace(publishDate, omitPublishDate, ' '), '[ ]{2,}', ' ');
+      set publishdate = regexp_replace(regexp_replace(publishdate, omitPublishDate, ' '), '[ ]{2,}', ' ');
 
       -- Set character limit
-      set publishDate = trim(substring(publishDate, 1, maxLengthPublishDate));
+      set publishdate = trim(substring(publishdate, 1, maxLengthPublishDate));
 
       -- Check if the parameter cannot be casted into a date time
-      if str_to_date(publishDate, '%Y-%m-%d %H:%i:%S') is null then
+      if str_to_date(publishdate, '%Y-%m-%d %H:%i:%S') is null then
         -- Set the string as empty to be nulled below
-        set publishDate = '';
+        set publishdate = '';
       end if;
 
       -- Check if empty string
-      if publishDate = '' then
+      if publishdate = '' then
         -- Set parameter to null if empty string
-        set publishDate = nullif(publishDate, '');
+        set publishdate = nullif(publishdate, '');
       end if;
     end if;
 
@@ -126,9 +126,9 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     -- Check if option mode is insert temp movie
     elseif optionMode = 'insertTempMovie' then
       -- Check if parameters are not null
-      if titlelong is not null and titleshort is not null and publishDate is not null then
+      if titlelong is not null and titleshort is not null and publishdate is not null then
         -- Insert record
-        insert into moviefeedtemp (titlelong, titleshort, publish_date, created_date) values (titlelong, lower(titleshort), publishDate, current_timestamp(6));
+        insert into moviefeedtemp (titlelong, titleshort, publish_date, created_date) values (titlelong, lower(titleshort), publishdate, current_timestamp(6));
 
         -- Select message
         select
@@ -142,9 +142,9 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     -- Check if option mode is insert temp tv
     elseif optionMode = 'insertTempTV' then
       -- Check if parameters are not null
-      if titlelong is not null and titleshort is not null and publishDate is not null then
+      if titlelong is not null and titleshort is not null and publishdate is not null then
         -- Insert record
-        insert into tvfeedtemp (titlelong, titleshort, publish_date, created_date) values (titlelong, lower(titleshort), publishDate, current_timestamp(6));
+        insert into tvfeedtemp (titlelong, titleshort, publish_date, created_date) values (titlelong, lower(titleshort), publishdate, current_timestamp(6));
 
         -- Select message
         select
