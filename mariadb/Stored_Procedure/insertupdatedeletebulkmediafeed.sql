@@ -4,7 +4,7 @@ use <databasename>;
 -- =================================================
 --        File: insertupdatedeletebulkmediafeed
 --     Created: 08/26/2020
---     Updated: 11/05/2020
+--     Updated: 11/06/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert update delete bulk media feed
@@ -27,6 +27,17 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     declare maxLengthTitleLong int;
     declare maxLengthTitleShort int;
     declare maxLengthPublishDate int;
+    declare code varchar(5) default '00000';
+    declare msg text;
+    declare result text;
+    declare successcode varchar(5);
+
+    -- Declare exception handler for failed insert
+    declare CONTINUE HANDLER FOR SQLEXCEPTION
+      begin
+        GET DIAGNOSTICS CONDITION 1
+          code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
+      end;
 
     -- Set variable
     set yearString = '';
@@ -38,6 +49,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     set maxLengthTitleLong = 255;
     set maxLengthTitleShort = 255;
     set maxLengthPublishDate = 255;
+    set successcode = '00000';
 
     -- Check if parameter is not null
     if optionMode is not null then
@@ -107,53 +119,147 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
 
     -- Check if option mode is delete temp movie
     if optionMode = 'deleteTempMovie' then
-      -- Delete records
-      delete from moviefeedtemp;
+      -- Start the tranaction
+      start transaction;
+        -- Delete records
+        delete mft
+        from moviefeedtemp mft;
+
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) Delete"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
 
       -- Select message
       select
-      'Success~Record(s) deleted' as `status`;
+      result as `status`;
 
     -- Else check if option mode is delete temp tv
     elseif optionMode = 'deleteTempTV' then
-      -- Delete records
-      delete from tvfeedtemp;
+      -- Start the tranaction
+      start transaction;
+        -- Delete records
+        delete tft
+        from tvfeedtemp tft;
+
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) Delete"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
 
       -- Select message
       select
-      'Success~Record(s) deleted' as `status`;
+      result as `status`;
 
     -- Check if option mode is insert temp movie
     elseif optionMode = 'insertTempMovie' then
       -- Check if parameters are not null
       if titlelong is not null and titleshort is not null and publishdate is not null then
-        -- Insert record
-        insert into moviefeedtemp (titlelong, titleshort, publish_date, created_date) values (titlelong, lower(titleshort), publishdate, current_timestamp(6));
+        -- Start the tranaction
+        start transaction;
+          -- Insert record
+          insert into moviefeedtemp
+          (
+            titlelong,
+            titleshort,
+            publish_date,
+            created_date
+          )
+          values
+          (
+            titlelong,
+            lower(titleshort),
+            publishdate,
+            current_timestamp(6)
+          );
 
-        -- Select message
-        select
-        'Success~Record(s) inserted' as `status`;
+          -- Check whether the insert was successful
+          if code = successcode then
+            -- Commit transactional statement
+            commit;
+
+            -- Set message
+            set result = concat('{"Status": "Success", "Message": "Record(s) inserted"}');
+          else
+            -- Rollback to the previous state before the transaction was called
+            rollback;
+
+            -- Set message
+            set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+          end if;
       else
-        -- Select message
-        select
-        'Error~Process halted, titlelong, titleshort, and or publish date were not provided' as `status`;
+        -- Else parameters were not given
+        -- Set message
+        set result = concat('{"Status": "Error", "Message": "Process halted, titlelong, titleshort, and or publish date were not provided"}');
       end if;
+
+      -- Select message
+      select
+      result as `status`;
 
     -- Check if option mode is insert temp tv
     elseif optionMode = 'insertTempTV' then
       -- Check if parameters are not null
       if titlelong is not null and titleshort is not null and publishdate is not null then
         -- Insert record
-        insert into tvfeedtemp (titlelong, titleshort, publish_date, created_date) values (titlelong, lower(titleshort), publishdate, current_timestamp(6));
+        insert into tvfeedtemp
+        (
+          titlelong,
+          titleshort,
+          publish_date,
+          created_date
+        )
+        values
+        (
+          titlelong,
+          lower(titleshort),
+          publishdate,
+          current_timestamp(6)
+        );
 
-        -- Select message
-        select
-        'Success~Record(s) inserted' as `status`;
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) inserted"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
       else
-        -- Select message
-        select
-        'Error~Process halted, titlelong, titleshort, and or publish date were not provided' as `status`;
+        -- Else parameters were not given
+        -- Set message
+        set result = concat('{"Status": "Error", "Message": "Process halted, titlelong, titleshort, and or publish date were not provided"}');
       end if;
+
+      -- Select message
+      select
+      result as `status`;
 
     -- Else check if option mode is update bulk movie
     elseif optionMode = 'updateBulkMovie' then
@@ -168,7 +274,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         `mfID` bigint(20) default null,
         `titlelong` varchar(255) collate utf8mb4_unicode_520_ci not null,
         `titleshort` varchar(255) collate utf8mb4_unicode_520_ci not null,
-        `publish_date` datetime(6) not null,
+        `publish_date` datetime not null,
         `actionstatus` int(11) null
       );
 
@@ -198,8 +304,8 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           )
         ) and
         (
-          cast(mft.publish_date as datetime(6)) >= date_add(current_timestamp(6), interval -1 hour) and
-          cast(mft.publish_date as datetime(6)) <= date_add(current_timestamp(6), interval 0 hour)
+          cast(mft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
+          cast(mft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
         )
         group by mft.titlelong, mft.titleshort, mft.publish_date
       ),
@@ -248,19 +354,36 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
       md.mfID as `mfID`
       from movieDetails md;
 
-      -- Update records
-      update moviefeed mf
-      inner join MovieFeedTempTable mftt on mftt.mfID = mf.mfID
-      set
-      mf.publish_date = cast(mftt.publish_date as datetime(6)),
-      mf.modified_date = cast(current_timestamp(6) as datetime(6));
+      -- Start the tranaction
+      start transaction;
+        -- Update records
+        update moviefeed mf
+        inner join MovieFeedTempTable mftt on mftt.mfID = mf.mfID
+        set
+        mf.publish_date = cast(mftt.publish_date as datetime),
+        mf.modified_date = cast(current_timestamp(6) as datetime);
 
-      -- Drop temporary table
-      drop temporary table MovieFeedTempTable;
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) updated"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
+
+        -- Drop temporary table
+        drop temporary table MovieFeedTempTable;
 
       -- Select message
       select
-      'Success~Record(s) updated' as `status`;
+      result as `status`;
 
     -- Else check if option mode is update bulk tv
     elseif optionMode = 'updateBulkTV' then
@@ -270,7 +393,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         `tfID` bigint(20) default null,
         `titlelong` varchar(255) collate utf8mb4_unicode_520_ci not null,
         `titleshort` varchar(255) collate utf8mb4_unicode_520_ci not null,
-        `publish_date` datetime(6) not null,
+        `publish_date` datetime not null,
         `actionstatus` int(11) null
       );
 
@@ -300,8 +423,8 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           )
         ) and
         (
-          cast(tft.publish_date as datetime(6)) >= date_add(current_timestamp(6), interval -1 hour) and
-          cast(tft.publish_date as datetime(6)) <= date_add(current_timestamp(6), interval 0 hour)
+          cast(tft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
+          cast(tft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
         )
         group by tft.titlelong, tft.titleshort, tft.publish_date
       ),
@@ -338,16 +461,36 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
       td.tfID as `tfID`
       from tvDetails td;
 
-      -- Update records
-      update tvfeed tf
-      inner join TVFeedTempTable tftt on tftt.tfID = tf.tfID
-      set
-      tf.publish_date = cast(tftt.publish_date as datetime(6)),
-      tf.modified_date = cast(current_timestamp(6) as datetime(6));
+      -- Start the tranaction
+      start transaction;
+        -- Update records
+        update tvfeed tf
+        inner join TVFeedTempTable tftt on tftt.tfID = tf.tfID
+        set
+        tf.publish_date = cast(tftt.publish_date as datetime),
+        tf.modified_date = cast(current_timestamp(6) as datetime);
+
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) updated"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
+
+        -- Drop temporary table
+        drop temporary table TVFeedTempTable;
 
       -- Select message
       select
-      'Success~Record(s) updated' as `status`;
+      result as `status`;
 
     -- Else check if option mode is insert bulk movie
     elseif optionMode = 'insertBulkMovie' then
@@ -356,165 +499,199 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
       if(date_format(date_add(current_timestamp(), interval 0 month), '%m') <= '03', concat(date_format(date_add(current_timestamp(), interval -1 year), '%Y'), '|', date_format(date_add(current_timestamp(), interval 0 year), '%Y')), date_format(date_add(current_timestamp(), interval 0 year), '%Y'))
       into yearString;
 
-      -- Insert records
-      insert into moviefeed (titlelong, titleshort, publish_date, actionstatus, created_date, modified_date)
+      -- Start the tranaction
+      start transaction;
+        -- Insert records
+        insert into moviefeed (titlelong, titleshort, publish_date, actionstatus, created_date, modified_date)
 
-      -- Remove duplicate records based on group by
-      with subMovieDetails as
-      (
-        -- Select unique records
-        select
-        trim(substring(regexp_replace(regexp_replace(mft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
-        trim(substring(regexp_replace(regexp_replace(mft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
-        trim(substring(regexp_replace(regexp_replace(mft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
-        from moviefeedtemp mft
-        where
+        -- Remove duplicate records based on group by
+        with subMovieDetails as
         (
+          -- Select unique records
+          select
+          trim(substring(regexp_replace(regexp_replace(mft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
+          trim(substring(regexp_replace(regexp_replace(mft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
+          trim(substring(regexp_replace(regexp_replace(mft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
+          from moviefeedtemp mft
+          where
           (
-            trim(mft.titlelong) <> '' and
-            trim(mft.titleshort) <> '' and
-            trim(mft.publish_date) <> ''
-          ) or
-          (
-            mft.titlelong is not null and
-            mft.titleshort is not null and
-            mft.publish_date is not null
-          )
-        ) -- and
-        -- (
-        --   cast(tft.publish_date as datetime(6)) >= date_add(current_timestamp(6), interval -1 hour) and
-        --   cast(tft.publish_date as datetime(6)) <= date_add(current_timestamp(6), interval 0 hour)
-        -- )
-        group by mft.titlelong, mft.titleshort, mft.publish_date
-      ),
-      movieDetails as
-      (
-        -- Select unique records
-        select
-        smd.titlelong as `titlelong`,
-        smd.titleshort as `titleshort`,
-        smd.publish_date as `publish_date`,
-        mfas.actionstatus as `actionstatus`,
-        mf.mfID as `mfID`
-        from subMovieDetails smd
-        left join moviefeed mf on mf.titlelong = smd.titlelong
-        left join moviefeed mfas on mfas.titleshort = smd.titleshort
-        join mediaaudioencode mae on mae.movieInclude in (1) and smd.titlelong like concat('%', mae.audioencode, '%')
-        left join mediadynamicrange mdr on mdr.movieInclude in (1) and smd.titlelong like concat('%', mdr.dynamicrange, '%')
-        join mediaresolution mr on mr.movieInclude in (1) and smd.titlelong like concat('%', mr.resolution, '%')
-        left join mediastreamsource mss on mss.movieInclude in (1) and smd.titlelong like concat('%', mss.streamsource, '%')
-        join mediavideoencode mve on mve.movieInclude in (1) and smd.titlelong like concat('%', mve.videoencode, '%')
-        inner join (select smdii.titlelong, max(smdii.publish_date) as publish_date from subMovieDetails smdii group by smdii.titlelong) as smdi on smdi.titlelong = smd.titlelong and smdi.publish_date = smd.publish_date
-        where
-        (
-          mfas.actionstatus not in (1) or
-          mfas.actionstatus is null
-        ) and
-        mf.mfID is null and
-        (
-          (
-            yearString like '%|%' and
             (
-              smd.titlelong like concat('%', substring(yearString, 1, 4), '%') or
-              smd.titlelong like concat('%', substring(yearString, 6, 9), '%')
+              trim(mft.titlelong) <> '' and
+              trim(mft.titleshort) <> '' and
+              trim(mft.publish_date) <> ''
+            ) or
+            (
+              mft.titlelong is not null and
+              mft.titleshort is not null and
+              mft.publish_date is not null
             )
-          ) or
+          ) -- and
+          -- (
+          --   cast(tft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
+          --   cast(tft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
+          -- )
+          group by mft.titlelong, mft.titleshort, mft.publish_date
+        ),
+        movieDetails as
+        (
+          -- Select unique records
+          select
+          smd.titlelong as `titlelong`,
+          smd.titleshort as `titleshort`,
+          smd.publish_date as `publish_date`,
+          mfas.actionstatus as `actionstatus`,
+          mf.mfID as `mfID`
+          from subMovieDetails smd
+          left join moviefeed mf on mf.titlelong = smd.titlelong
+          left join moviefeed mfas on mfas.titleshort = smd.titleshort
+          join mediaaudioencode mae on mae.movieInclude in (1) and smd.titlelong like concat('%', mae.audioencode, '%')
+          left join mediadynamicrange mdr on mdr.movieInclude in (1) and smd.titlelong like concat('%', mdr.dynamicrange, '%')
+          join mediaresolution mr on mr.movieInclude in (1) and smd.titlelong like concat('%', mr.resolution, '%')
+          left join mediastreamsource mss on mss.movieInclude in (1) and smd.titlelong like concat('%', mss.streamsource, '%')
+          join mediavideoencode mve on mve.movieInclude in (1) and smd.titlelong like concat('%', mve.videoencode, '%')
+          inner join (select smdii.titlelong, max(smdii.publish_date) as publish_date from subMovieDetails smdii group by smdii.titlelong) as smdi on smdi.titlelong = smd.titlelong and smdi.publish_date = smd.publish_date
+          where
           (
-            smd.titlelong like concat('%', substring(yearString, 1, 4), '%')
+            mfas.actionstatus not in (1) or
+            mfas.actionstatus is null
+          ) and
+          mf.mfID is null and
+          (
+            (
+              yearString like '%|%' and
+              (
+                smd.titlelong like concat('%', substring(yearString, 1, 4), '%') or
+                smd.titlelong like concat('%', substring(yearString, 6, 9), '%')
+              )
+            ) or
+            (
+              smd.titlelong like concat('%', substring(yearString, 1, 4), '%')
+            )
           )
+          group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
         )
-        group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
-      )
 
-      -- Select records
-      select
-      md.titlelong,
-      md.titleshort,
-      cast(md.publish_date as datetime(6)),
-      if(md.actionstatus is null, 0, md.actionstatus),
-      cast(current_timestamp(6) as datetime(6)),
-      cast(current_timestamp(6) as datetime(6))
-      from movieDetails md
-      group by md.titlelong, md.titleshort, md.publish_date, md.actionstatus;
+        -- Select records
+        select
+        md.titlelong,
+        md.titleshort,
+        cast(md.publish_date as datetime),
+        if(md.actionstatus is null, 0, md.actionstatus),
+        cast(current_timestamp(6) as datetime),
+        cast(current_timestamp(6) as datetime)
+        from movieDetails md
+        group by md.titlelong, md.titleshort, md.publish_date, md.actionstatus;
+
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) inserted"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
 
       -- Select message
       select
-      'Success~Record(s) inserted' as `status`;
+      result as `status`;
 
     -- Else check if option mode is insert bulk tv
     elseif optionMode = 'insertBulkTV' then
-      -- Insert records
-      insert into tvfeed (titlelong, titleshort, publish_date, actionstatus, created_date, modified_date)
+      -- Start the tranaction
+      start transaction;
+        -- Insert records
+        insert into tvfeed (titlelong, titleshort, publish_date, actionstatus, created_date, modified_date)
 
-      -- Remove duplicate records based on group by
-      with subTVDetails as
-      (
-        -- Select unique records
-        select
-        trim(substring(regexp_replace(regexp_replace(tft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
-        trim(substring(regexp_replace(regexp_replace(tft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
-        trim(substring(regexp_replace(regexp_replace(tft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
-        from tvfeedtemp tft
-        where
+        -- Remove duplicate records based on group by
+        with subTVDetails as
         (
+          -- Select unique records
+          select
+          trim(substring(regexp_replace(regexp_replace(tft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
+          trim(substring(regexp_replace(regexp_replace(tft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
+          trim(substring(regexp_replace(regexp_replace(tft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
+          from tvfeedtemp tft
+          where
           (
-            trim(tft.titlelong) <> '' and
-            trim(tft.titleshort) <> '' and
-            trim(tft.publish_date) <> ''
-          ) or
-          (
-            tft.titlelong is not null and
-            tft.titleshort is not null and
-            tft.publish_date is not null
-          )
-        ) -- and
-        -- (
-        --   cast(tft.publish_date as datetime(6)) >= date_add(current_timestamp(6), interval -1 hour) and
-        --   cast(tft.publish_date as datetime(6)) <= date_add(current_timestamp(6), interval 0 hour)
-        -- ) and
-        group by tft.titlelong, tft.titleshort, tft.publish_date
-      ),
-      tvDetails as
-      (
-        -- Select unique records
-        select
-        std.titlelong as `titlelong`,
-        std.titleshort as `titleshort`,
-        std.publish_date as `publish_date`,
-        tfas.actionstatus as `actionstatus`,
-        tf.tfID as `tfID`
-        from subTVDetails std
-        left join tvfeed tf on tf.titlelong = std.titlelong
-        left join tvfeed tfas on tfas.titleshort = std.titleshort
-        join mediaaudioencode mae on mae.tvInclude in (1) and std.titlelong like concat('%', mae.audioencode, '%')
-        left join mediadynamicrange mdr on mdr.tvInclude in (1) and std.titlelong like concat('%', mdr.dynamicrange, '%')
-        join mediaresolution mr on mr.tvInclude in (1) and std.titlelong like concat('%', mr.resolution, '%')
-        left join mediastreamsource mss on mss.tvInclude in (1) and std.titlelong like concat('%', mss.streamsource, '%')
-        join mediavideoencode mve on mve.tvInclude in (1) and std.titlelong like concat('%', mve.videoencode, '%')
-        inner join (select stdii.titlelong, max(stdii.publish_date) as publish_date from subTVDetails stdii group by stdii.titlelong) as stdi on stdi.titlelong = std.titlelong and stdi.publish_date = std.publish_date
-        where
+            (
+              trim(tft.titlelong) <> '' and
+              trim(tft.titleshort) <> '' and
+              trim(tft.publish_date) <> ''
+            ) or
+            (
+              tft.titlelong is not null and
+              tft.titleshort is not null and
+              tft.publish_date is not null
+            )
+          ) -- and
+          -- (
+          --   cast(tft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
+          --   cast(tft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
+          -- ) and
+          group by tft.titlelong, tft.titleshort, tft.publish_date
+        ),
+        tvDetails as
         (
-          tfas.actionstatus not in (1) or
-          tfas.actionstatus is null
-        ) and
-        tf.tfID is null
-        group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
-      )
+          -- Select unique records
+          select
+          std.titlelong as `titlelong`,
+          std.titleshort as `titleshort`,
+          std.publish_date as `publish_date`,
+          tfas.actionstatus as `actionstatus`,
+          tf.tfID as `tfID`
+          from subTVDetails std
+          left join tvfeed tf on tf.titlelong = std.titlelong
+          left join tvfeed tfas on tfas.titleshort = std.titleshort
+          join mediaaudioencode mae on mae.tvInclude in (1) and std.titlelong like concat('%', mae.audioencode, '%')
+          left join mediadynamicrange mdr on mdr.tvInclude in (1) and std.titlelong like concat('%', mdr.dynamicrange, '%')
+          join mediaresolution mr on mr.tvInclude in (1) and std.titlelong like concat('%', mr.resolution, '%')
+          left join mediastreamsource mss on mss.tvInclude in (1) and std.titlelong like concat('%', mss.streamsource, '%')
+          join mediavideoencode mve on mve.tvInclude in (1) and std.titlelong like concat('%', mve.videoencode, '%')
+          inner join (select stdii.titlelong, max(stdii.publish_date) as publish_date from subTVDetails stdii group by stdii.titlelong) as stdi on stdi.titlelong = std.titlelong and stdi.publish_date = std.publish_date
+          where
+          (
+            tfas.actionstatus not in (1) or
+            tfas.actionstatus is null
+          ) and
+          tf.tfID is null
+          group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+        )
 
-      -- Select records
-      select
-      td.titlelong,
-      td.titleshort,
-      cast(td.publish_date as datetime(6)),
-      if(td.actionstatus is null, 0, td.actionstatus),
-      cast(current_timestamp(6) as datetime(6)),
-      cast(current_timestamp(6) as datetime(6))
-      from tvDetails td
-      group by td.titlelong, td.titleshort, td.publish_date, td.actionstatus;
+        -- Select records
+        select
+        td.titlelong,
+        td.titleshort,
+        cast(td.publish_date as datetime),
+        if(td.actionstatus is null, 0, td.actionstatus),
+        cast(current_timestamp(6) as datetime),
+        cast(current_timestamp(6) as datetime)
+        from tvDetails td
+        group by td.titlelong, td.titleshort, td.publish_date, td.actionstatus;
+
+        -- Check whether the insert was successful
+        if code = successcode then
+          -- Commit transactional statement
+          commit;
+
+          -- Set message
+          set result = concat('{"Status": "Success", "Message": "Record(s) inserted"}');
+        else
+          -- Rollback to the previous state before the transaction was called
+          rollback;
+
+          -- Set message
+          set result = concat('{"Status": "Error", "Message": "', msg, '"}');
+        end if;
 
       -- Select message
       select
-      'Success~Record(s) inserted' as `status`;
+      result as `status`;
     end if;
   end
 // delimiter ;
