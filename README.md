@@ -49,3 +49,6 @@
     * [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
 * Install module in batch instead of Individual Installation
   * `pip3.9 install -r /path/to/requirements.txt`
+
+* Upgrade module in batch instead of Individual Upgrades
+  * `pip3.9 install --upgrade -r /path/to/requirements.txt`
