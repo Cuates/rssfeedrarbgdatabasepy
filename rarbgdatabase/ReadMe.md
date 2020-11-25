@@ -6,8 +6,8 @@
 * [Execution](#execution)
 
 ### Version
-* 0.0.1
+* 0.0.2
 
 ### Execution
 * Python Script
-  * `python3.8 rssfeedrarbgdatabase.py`
+  * `python3.9 rssfeedrarbgdatabase.py`
