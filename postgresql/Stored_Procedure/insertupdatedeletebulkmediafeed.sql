@@ -4,7 +4,7 @@
 -- =================================================
 --        File: insertupdatedeletebulkmediafeed
 --     Created: 08/26/2020
---     Updated: 11/14/2020
+--     Updated: 11/25/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Bulk Media Feed
@@ -21,11 +21,14 @@ as $$
   declare omitOptionMode varchar(255) := '[^a-zA-Z]';
   declare omitTitleLong varchar(255) := '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
   declare omitTitleShort varchar(255) := '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
-  declare omitPublishDate varchar(255) := '[^0-9\-: ]';
+  declare omitPublishDate varchar(255) := '[^0-9\-:./ ]';
   declare maxLengthOptionMode int := 255;
   declare maxLengthTitleLong int := 255;
   declare maxLengthTitleShort int := 255;
   declare maxLengthPublishDate int := 255;
+  declare titlelongstring text := titlelong;
+  declare titleshortstring text := titleshort;
+  declare publishdatestring text := publishDate;
   declare code varchar(5) := '00000';
   declare msg text := '';
   declare result text := '';
@@ -47,53 +50,53 @@ as $$
     end if;
 
     -- Check if parameter is not null
-    if titleLong is not null then
+    if titlelongstring is not null then
       -- Omit characters, multi space to single space, and trim leading and trailing spaces
-      titlelong := regexp_replace(regexp_replace(titlelong, omitTitleLong, ' '), '[ ]{2,}', ' ');
+      titlelongstring := regexp_replace(regexp_replace(titlelongstring, omitTitleLong, ' '), '[ ]{2,}', ' ');
 
       -- Set character limit
-      titlelong := trim(substring(titlelong, 1, maxLengthTitleLong));
+      titlelongstring := trim(substring(titlelongstring, 1, maxLengthTitleLong));
 
       -- Check if empty string
-      if titlelong = '' then
+      if titlelongstring = '' then
         -- Set parameter to null if empty string
-        titlelong := nullif(titlelong, '');
+        titlelongstring := nullif(titlelongstring, '');
       end if;
     end if;
 
     -- Check if parameter is not null
-    if titleShort is not null then
+    if titleshortstring is not null then
       -- Omit characters, multi space to single space, and trim leading and trailing spaces
-      titleshort := regexp_replace(regexp_replace(titleshort, omitTitleShort, ' '), '[ ]{2,}', ' ');
+      titleshortstring := regexp_replace(regexp_replace(titleshortstring, omitTitleShort, ' '), '[ ]{2,}', ' ');
 
       -- Set character limit
-      titleshort := trim(substring(titleshort, 1, maxLengthTitleShort));
+      titleshortstring := trim(substring(titleshortstring, 1, maxLengthTitleShort));
 
       -- Check if empty string
-      if titleshort = '' then
+      if titleshortstring = '' then
         -- Set parameter to null if empty string
-        titleshort := nullif(titleshort, '');
+        titleshortstring := nullif(titleshortstring, '');
       end if;
     end if;
 
     -- Check if parameter is not null
-    if publishDate is not null then
+    if publishdatestring is not null then
       -- Omit characters, multi space to single space, and trim leading and trailing spaces
-      publishDate := regexp_replace(regexp_replace(publishDate, omitPublishDate, ' '), '[ ]{2,}', ' ');
+      publishdatestring := regexp_replace(regexp_replace(publishdatestring, omitPublishDate, ' '), '[ ]{2,}', ' ');
 
       -- Set character limit
-      publishDate := trim(substring(publishDate, 1, maxLengthPublishDate));
+      publishdatestring := trim(substring(publishdatestring, 1, maxLengthPublishDate));
 
       -- Check if the parameter cannot be casted into a date time
-      if to_timestamp(publishDate, 'YYYY-MM-DD HH24:MI:SS') is null then
+      if to_timestamp(publishdatestring, 'YYYY-MM-DD HH24:MI:SS') is null then
         -- Set the string as empty to be nulled below
-        publishDate := '';
+        publishdatestring := '';
       end if;
 
       -- Check if empty string
-      if publishDate = '' then
+      if publishdatestring = '' then
         -- Set parameter to null if empty string
-        publishDate := nullif(publishDate, '');
+        publishdatestring := nullif(publishdatestring, '');
       end if;
     end if;
 
@@ -148,7 +151,7 @@ as $$
     -- Check if option mode is insert temp movie
     elseif optionMode = 'insertTempMovie' then
       -- Check if parameters are not null
-      if titlelong is not null and titleshort is not null and publishDate is not null then
+      if titlelongstring is not null and titleshortstring is not null and publishdatestring is not null then
         -- Begin begin/except
         begin
           -- Insert record
@@ -161,10 +164,10 @@ as $$
           )
           values
           (
-            titlelong,
-            lower(titleshort),
-            publishDate,
-            current_timestamp
+            titlelongstring,
+            lower(titleshortstring),
+            publishdatestring,
+            cast(current_timestamp as timestamp)
           );
 
           -- Set message
@@ -190,7 +193,7 @@ as $$
     -- Check if option mode is insert temp tv
     elseif optionMode = 'insertTempTV' then
       -- Check if parameters are not null
-      if titlelong is not null and titleshort is not null and publishDate is not null then
+      if titlelongstring is not null and titleshortstring is not null and publishdatestring is not null then
         -- Begin begin/except
         begin
           -- Insert record
@@ -203,10 +206,10 @@ as $$
           )
           values
           (
-            titlelong,
-            lower(titleshort),
-            publishDate,
-            current_timestamp
+            titlelongstring,
+            lower(titleshortstring),
+            publishdatestring,
+            cast(current_timestamp as timestamp)
           );
 
           -- Set message
