@@ -1,10 +1,10 @@
 -- Database Connect
-use <databasename>;
+-- use <databasename>;
 
 -- =================================================
 --        File: insertupdatedeletebulkmediafeed
 --     Created: 08/26/2020
---     Updated: 11/06/2020
+--     Updated: 11/25/2020
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert update delete bulk media feed
@@ -44,7 +44,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     set omitOptionMode = '[^a-zA-Z]';
     set omitTitleLong = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitTitleShort = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
-    set omitPublishDate = '[^0-9\-: ]';
+    set omitPublishDate = '[^0-9\-:./ ]';
     set maxLengthOptionMode = 255;
     set maxLengthTitleLong = 255;
     set maxLengthTitleShort = 255;
@@ -67,7 +67,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     end if;
 
     -- Check if parameter is not null
-    if titleLong is not null then
+    if titlelong is not null then
       -- Omit characters, multi space to single space, and trim leading and trailing spaces
       set titlelong = regexp_replace(regexp_replace(titlelong, omitTitleLong, ' '), '[ ]{2,}', ' ');
 
@@ -82,7 +82,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     end if;
 
     -- Check if parameter is not null
-    if titleShort is not null then
+    if titleshort is not null then
       -- Omit characters, multi space to single space, and trim leading and trailing spaces
       set titleshort = regexp_replace(regexp_replace(titleshort, omitTitleShort, ' '), '[ ]{2,}', ' ');
 
@@ -265,7 +265,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     elseif optionMode = 'updateBulkMovie' then
       -- Set variable
       select
-      if(date_format(date_add(current_timestamp(), interval 0 month), '%m') <= '03', concat(date_format(date_add(current_timestamp(), interval -1 year), '%Y'), '|', date_format(date_add(current_timestamp(), interval 0 year), '%Y')), date_format(date_add(current_timestamp(), interval 0 year), '%Y'))
+      if(date_format(date_add(current_timestamp(6), interval 0 month), '%m') <= '03', concat(date_format(date_add(current_timestamp(6), interval -1 year), '%Y'), '|', date_format(date_add(current_timestamp(6), interval 0 year), '%Y')), date_format(date_add(current_timestamp(6), interval 0 year), '%Y'))
       into yearString;
 
       -- Create temporary table
@@ -496,7 +496,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     elseif optionMode = 'insertBulkMovie' then
       -- Set variable
       select
-      if(date_format(date_add(current_timestamp(), interval 0 month), '%m') <= '03', concat(date_format(date_add(current_timestamp(), interval -1 year), '%Y'), '|', date_format(date_add(current_timestamp(), interval 0 year), '%Y')), date_format(date_add(current_timestamp(), interval 0 year), '%Y'))
+      if(date_format(date_add(current_timestamp(6), interval 0 month), '%m') <= '03', concat(date_format(date_add(current_timestamp(6), interval -1 year), '%Y'), '|', date_format(date_add(current_timestamp(6), interval 0 year), '%Y')), date_format(date_add(current_timestamp(6), interval 0 year), '%Y'))
       into yearString;
 
       -- Start the tranaction
