@@ -191,6 +191,13 @@ class RssFeedRarBgDatabaseClass:
 
       # Log message
       self._setLogger('Issue ' + actionWord + ' rss feed rarbg : ' + str(e))
+    # Finally closing connection
+    finally:
+      # Check if connection is not None
+      if self.connection is not None:
+        # Close database connnection
+        self.connection.close()
+        #print('Database connection close.')
 
     # Return message
     return returnMessage
