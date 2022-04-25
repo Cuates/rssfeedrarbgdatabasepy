@@ -177,10 +177,10 @@ class RssFeedRarBgDatabaseClass:
           # Close execution
           messageResponse.close()
 
-        # Check if connection was established
-        if (self.connection):
-          # Close database connection
-          self.connection.close()
+        ## Check if connection was established
+        #if (self.connection):
+          ## Close database connection
+          #self.connection.close()
       else:
         # Set message
         returnMessage = [{'SError': 'Error', 'SMessage': connectionStatus['SError']}]
@@ -197,6 +197,8 @@ class RssFeedRarBgDatabaseClass:
       if self.connection is not None:
         # Close database connnection
         self.connection.close()
+        # Will close all connections of the connection pool.
+        self.engine.dispose()
         #print('Database connection close.')
 
     # Return message
