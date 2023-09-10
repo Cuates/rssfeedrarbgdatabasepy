@@ -14,7 +14,7 @@
 drop procedure if exists insertupdatedeletebulkmediafeed;
 
 -- Procedure Create Or Replace
-create or replace procedure insertupdatedeletebulkmediafeed(in optionMode text, in titlelong text default null, in titleshort text default null, in publishDate text default null, inout status text default null)
+create or replace procedure insertupdatedeletebulkmediafeed(in optionMode text, in titlelong text default null, in titleshort text default null, in publishDate text default null, in infourl text default null, inout status text default null)
 as $$
   -- Declare and set variable
   declare yearString varchar(255) := '';
@@ -22,13 +22,16 @@ as $$
   declare omitTitleLong varchar(255) := '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
   declare omitTitleShort varchar(255) := '[^a-zA-Z0-9 !"\#$%&''()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
   declare omitPublishDate varchar(255) := '[^0-9\-:./ ]';
+  declare omitInfoUrl varchar(255) := '[^a-zA-Z0-9\-./%?=&]';
   declare maxLengthOptionMode int := 255;
   declare maxLengthTitleLong int := 255;
   declare maxLengthTitleShort int := 255;
   declare maxLengthPublishDate int := 255;
+  declare maxLengthInfoUrl int := 8000;
   declare titlelongstring text := titlelong;
   declare titleshortstring text := titleshort;
   declare publishdatestring text := publishDate;
+  declare infourlstring text := infourl;
   declare code varchar(5) := '00000';
   declare msg text := '';
   declare result text := '';
@@ -100,6 +103,21 @@ as $$
       end if;
     end if;
 
+    -- Check if parameter is not null
+    if infourlstring is not null then
+      -- Omit characters, multi space to single space, and trim leading and trailing spaces
+      infourlstring := regexp_replace(regexp_replace(infourlstring, omitInfoUrl, ' '), '[ ]{2,}', ' ');
+
+      -- Set character limit
+      infourlstring := trim(substring(infourlstring, 1, maxLengthInfoUrl));
+
+      -- Check if empty string
+      if infourlstring = '' then
+        -- Set parameter to null if empty string
+        infourlstring := nullif(infourlstring, '');
+      end if;
+    end if;
+
     -- Check if option mode is delete temp movie
     if optionMode = 'deleteTempMovie' then
       -- Begin begin/except
@@ -160,6 +178,7 @@ as $$
             titlelong,
             titleshort,
             publish_date,
+            info_url,
             created_date
           )
           values
@@ -167,6 +186,7 @@ as $$
             titlelongstring,
             lower(titleshortstring),
             publishdatestring,
+            infourlstring,
             cast(current_timestamp as timestamp)
           );
 
@@ -202,6 +222,7 @@ as $$
             titlelong,
             titleshort,
             publish_date,
+            info_url,
             created_date
           )
           values
@@ -209,6 +230,7 @@ as $$
             titlelongstring,
             lower(titleshortstring),
             publishdatestring,
+            infourlstring,
             cast(current_timestamp as timestamp)
           );
 
