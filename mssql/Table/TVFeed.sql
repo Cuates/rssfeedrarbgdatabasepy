@@ -32,10 +32,10 @@ create table [dbo].[TVFeed](
 ) on [primary]
 go
 
--- Contraint Default
+-- Constraint Default
 alter table [dbo].[TVFeed] add  default (getdate()) for [created_date]
 go
 
--- Contraint Default
+-- Constraint Default
 alter table [dbo].[TVFeed] add  default (getdate()) for [modified_date]
 go
