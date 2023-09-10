@@ -24,6 +24,7 @@ create table if not exists moviefeed(
   mfID bigint not null default nextval('moviefeed_mfID_seq'),
   titlelong citext not null,
   titleshort citext not null,
+  info_url citext default null,
   publish_date timestamp not null,
   actionstatus int not null,
   created_date timestamp not null default current_timestamp,
