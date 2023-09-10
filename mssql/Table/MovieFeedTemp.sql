@@ -24,6 +24,6 @@ create table [dbo].[MovieFeedTemp](
 ) on [primary]
 go
 
--- Contraint Default
+-- Constraint Default
 alter table [dbo].[MovieFeedTemp] add  default (getdate()) for [created_date]
 go
