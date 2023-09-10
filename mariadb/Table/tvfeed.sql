@@ -18,6 +18,7 @@ create table if not exists `tvfeed`(
   `tfID` bigint(20) unsigned not null auto_increment,
   `titlelong` varchar(255) collate utf8mb4_unicode_520_ci not null,
   `titleshort` varchar(255) collate utf8mb4_unicode_520_ci not null,
+  `info_url` text collate utf8mb4_unicode_520_ci default null,
   `publish_date` datetime(6) not null,
   `actionstatus` int(11) not null default 0,
   `created_date` datetime not null default current_timestamp(6),
