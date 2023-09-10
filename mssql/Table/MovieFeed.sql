@@ -35,6 +35,6 @@ go
 alter table [dbo].[MovieFeed] add  default (getdate()) for [created_date]
 go
 
--- Contraint Default
+-- Constraint Default
 alter table [dbo].[MovieFeed] add  default (getdate()) for [modified_date]
 go
