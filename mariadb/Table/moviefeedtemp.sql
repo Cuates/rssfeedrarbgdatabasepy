@@ -17,6 +17,7 @@ drop table if exists moviefeedtemp;
 create table if not exists `moviefeedtemp`(
   `titlelong` text collate utf8mb4_unicode_520_ci default null,
   `titleshort` text collate utf8mb4_unicode_520_ci default null,
+  `info_url` text collate utf8mb4_unicode_520_ci default null,
   `publish_date` text collate utf8mb4_unicode_520_ci default null,
   `created_date` datetime default current_timestamp(6)
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_520_ci;
