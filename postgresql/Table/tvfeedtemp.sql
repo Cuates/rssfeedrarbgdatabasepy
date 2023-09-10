@@ -17,6 +17,7 @@ drop table if exists tvfeedtemp;
 create table if not exists tvfeedtemp(
   titlelong citext default null,
   titleshort citext default null,
+  info_url citext default null,
   publish_date varchar(255) default null,
   created_date timestamp default current_timestamp
 );
