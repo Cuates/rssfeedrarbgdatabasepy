@@ -15,7 +15,7 @@ drop procedure if exists insertupdatedeletebulkmediafeed;
 
 -- Procedure Create
 delimiter //
-create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlelong text, in titleshort text, in publishdate text)
+create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlelong text, in titleshort text, in publishdate text, in infourl text)
   begin
     -- Declare variable
     declare yearString varchar(255);
@@ -23,10 +23,12 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     declare omitTitleLong varchar(255);
     declare omitTitleShort varchar(255);
     declare omitPublishDate varchar(255);
+    declare omitInfoUrl varchar(8000);
     declare maxLengthOptionMode int;
     declare maxLengthTitleLong int;
     declare maxLengthTitleShort int;
     declare maxLengthPublishDate int;
+    declare maxLengthInfoUrl int;
     declare code varchar(5) default '00000';
     declare msg text;
     declare result text;
@@ -45,10 +47,12 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     set omitTitleLong = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitTitleShort = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitPublishDate = '[^0-9\-:./ ]';
+    set omitInfoUrl = '[^a-zA-Z0-9\-./%?=&]';
     set maxLengthOptionMode = 255;
     set maxLengthTitleLong = 255;
     set maxLengthTitleShort = 255;
     set maxLengthPublishDate = 255;
+    set maxLengthInfoUrl = 8000;
     set successcode = '00000';
 
     -- Check if parameter is not null
@@ -117,9 +121,24 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
       end if;
     end if;
 
+    -- Check if parameter is not null
+    if infourl is not null then
+      -- Omit characters, multi space to single space, and trim leading and trailing spaces
+      set infourl = regexp_replace(regexp_replace(infourl, omitInfoUrl, ' '), '[ ]{2,}', ' ');
+
+      -- Set character limit
+      set infourl = trim(substring(infourl, 1, maxLengthInfoUrl));
+
+      -- Check if empty string
+      if infourl = '' then
+        -- Set parameter to null if empty string
+        set infourl = nullif(infourl, '');
+      end if;
+    end if;
+
     -- Check if option mode is delete temp movie
     if optionMode = 'deleteTempMovie' then
-      -- Start the tranaction
+      -- Start the transaction
       start transaction;
         -- Delete records
         delete mft
@@ -146,7 +165,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
 
     -- Else check if option mode is delete temp tv
     elseif optionMode = 'deleteTempTV' then
-      -- Start the tranaction
+      -- Start the transaction
       start transaction;
         -- Delete records
         delete tft
@@ -175,7 +194,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
     elseif optionMode = 'insertTempMovie' then
       -- Check if parameters are not null
       if titlelong is not null and titleshort is not null and publishdate is not null then
-        -- Start the tranaction
+        -- Start the transaction
         start transaction;
           -- Insert record
           insert into moviefeedtemp
@@ -183,6 +202,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
             titlelong,
             titleshort,
             publish_date,
+            info_url,
             created_date
           )
           values
@@ -190,6 +210,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
             titlelong,
             lower(titleshort),
             publishdate,
+            infourl,
             current_timestamp(6)
           );
 
@@ -227,6 +248,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           titlelong,
           titleshort,
           publish_date,
+          info_url,
           created_date
         )
         values
@@ -234,6 +256,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           titlelong,
           lower(titleshort),
           publishdate,
+          infourl,
           current_timestamp(6)
         );
 
