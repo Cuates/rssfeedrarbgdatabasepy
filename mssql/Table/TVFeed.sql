@@ -19,6 +19,8 @@ create table [dbo].[TVFeed](
   [tfID] [bigint] identity(1,1) not null,
   [titlelong] [nvarchar](255) not null,
   [titleshort] [nvarchar](255) not null,
+  [titleshort] [nvarchar](255) not null,
+  [info_url] [nvarchar](max) null,
   [publish_date] [datetime2](6) not null,
   [actionstatus] [int] not null,
   [created_date] [datetime2](6) not null,
