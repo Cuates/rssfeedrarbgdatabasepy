@@ -18,6 +18,7 @@ go
 create table [dbo].[TVFeedTemp](
   [titlelong] [nvarchar](max) null,
   [titleshort] [nvarchar](max) null,
+  [info_url] [nvarchar](max) null,
   [publish_date] [nvarchar](max) null,
   [created_date] [datetime2](6) null
 ) on [primary]
