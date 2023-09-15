@@ -383,6 +383,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         update moviefeed mf
         inner join MovieFeedTempTable mftt on mftt.mfID = mf.mfID
         set
+        mf.info_url = mftt.info_url,
         mf.publish_date = cast(mftt.publish_date as datetime),
         mf.modified_date = cast(current_timestamp(6) as datetime);
 
@@ -490,6 +491,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         update tvfeed tf
         inner join TVFeedTempTable tftt on tftt.tfID = tf.tfID
         set
+        tf.info_url = tftt.info_url,
         tf.publish_date = cast(tftt.publish_date as datetime),
         tf.modified_date = cast(current_timestamp(6) as datetime);
 
