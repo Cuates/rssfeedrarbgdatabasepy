@@ -333,6 +333,7 @@ as $$
         -- Update records
         update moviefeed
         set
+		info_url = md.info_url,
         publish_date = cast(md.publish_date as timestamp),
         modified_date = cast(current_timestamp as timestamp)
         from movieDetails md
@@ -412,6 +413,7 @@ as $$
         -- Update records
         update tvfeed
         set
+		info_url = td.info_url,
         publish_date = cast(td.publish_date as timestamp),
         modified_date = cast(current_timestamp as timestamp)
         from tvDetails td
