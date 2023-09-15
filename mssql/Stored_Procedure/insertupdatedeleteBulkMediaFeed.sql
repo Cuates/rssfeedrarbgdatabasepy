@@ -61,7 +61,7 @@ begin
   set @maxLengthInfoUrl = 8000
   set @result = ''
 
-  -- Check if parameter is not null
+  -- Check if the parameter is not null
   if @optionMode is not null
     begin
       -- Omit characters
@@ -70,15 +70,15 @@ begin
       -- Set character limit
       set @optionMode = trim(substring(@optionMode, 1, @maxLengthOptionMode))
 
-      -- Check if empty string
+      -- Check if an empty string
       if @optionMode = ''
         begin
-          -- Set parameter to null if empty string
+          -- Set the parameter to null if empty string
           set @optionMode = nullif(@optionMode, '')
         end
     end
 
-  -- Check if parameter is not null
+  -- Check if the parameter is not null
   if @titlelong is not null
     begin
       -- Omit characters
@@ -87,15 +87,15 @@ begin
       -- Set character limit
       set @titlelong = trim(substring(@titlelong, 1, @maxLengthTitleLong))
 
-      -- Check if empty string
+      -- Check if an empty string
       if @titlelong = ''
         begin
-          -- Set parameter to null if empty string
+          -- Set the parameter to null if empty string
           set @titlelong = nullif(@titlelong, '')
         end
     end
 
-  -- Check if parameter is not null
+  -- Check if the parameter is not null
   if @titleshort is not null
     begin
       -- Omit characters
@@ -104,15 +104,15 @@ begin
       -- Set character limit
       set @titleshort = trim(substring(@titleshort, 1, @maxLengthTitleShort))
 
-      -- Check if empty string
+      -- Check if an empty string
       if @titleshort = ''
         begin
-          -- Set parameter to null if empty string
+          -- Set the parameter to null if empty string
           set @titleshort = nullif(@titleshort, '')
         end
     end
 
-  -- Check if parameter is not null
+  -- Check if the parameter is not null
   if @publishdate is not null
     begin
       -- Omit characters
@@ -121,22 +121,22 @@ begin
       -- Set character limit
       set @publishdate = trim(substring(@publishdate, 1, @maxLengthPublishDate))
 
-      -- Check if the parameter cannot be casted into a date time
+      -- Check if the parameter cannot be cast into a date time
       if try_cast(@publishdate as datetime2(6)) is null
         begin
           -- Set the string as empty to be nulled below
           set @publishdate = ''
         end
 
-      -- Check if empty string
+      -- Check if an empty string
       if @publishdate = ''
         begin
-          -- Set parameter to null if empty string
+          -- Set the parameter to null if empty string
           set @publishdate = nullif(@publishdate, '')
         end
     end
 
-  -- Check if parameter is not null
+  -- Check if the parameter is not null
   if @infourl is not null
     begin
       -- Omit characters
@@ -145,10 +145,10 @@ begin
       -- Set character limit
       set @infourl = trim(substring(@infourl, 1, @maxLengthInfoUrl))
 
-      -- Check if empty string
+      -- Check if an empty string
       if @infourl = ''
         begin
-          -- Set parameter to null if empty string
+          -- Set the parameter to null if empty string
           set @infourl = nullif(@infourl, '')
         end
     end
@@ -381,7 +381,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(mft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(mft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
-			trim(substring(dbo.OmitCharacters(mft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+	    trim(substring(dbo.OmitCharacters(mft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(mft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.MovieFeedTemp mft
             where
@@ -405,7 +405,7 @@ begin
             select
             smd.titlelong as titlelong,
             smd.titleshort as titleshort,
-			smd.info_url as info_url,
+	    smd.info_url as info_url,
             smd.publish_date as publish_date,
             mfas.actionstatus as actionstatus,
             mf.mfID as mfID
@@ -439,6 +439,7 @@ begin
           -- Update records
           update dbo.MovieFeed
           set
+	  info_url = md.info_url,
           publish_date = cast(md.publish_date as datetime2(6)),
           modified_date = cast(getdate() as datetime2(6))
           from movieDetails md
@@ -488,7 +489,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(tft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(tft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
-			trim(substring(dbo.OmitCharacters(tft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+	    trim(substring(dbo.OmitCharacters(tft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(tft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.TVFeedTemp tft
             where
@@ -512,7 +513,7 @@ begin
             select
             std.titlelong as titlelong,
             std.titleshort as titleshort,
-			std.info_url as info_url,
+	    std.info_url as info_url,
             std.publish_date as publish_date,
             tfas.actionstatus as actionstatus,
             tf.tfID as tfID
@@ -534,6 +535,7 @@ begin
           -- Update records
           update dbo.TVFeed
           set
+	  info_url = td.info_url,
           publish_date = cast(td.publish_date as datetime2(6)),
           modified_date = cast(getdate() as datetime2(6))
           from tvDetails td
@@ -587,7 +589,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(mft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(mft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
-			trim(substring(dbo.OmitCharacters(mft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+	    trim(substring(dbo.OmitCharacters(mft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(mft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.MovieFeedTemp mft
             where
@@ -611,7 +613,7 @@ begin
             select
             substring(dbo.OmitCharacters(smd.titlelong, @omitTitleLong), 1, @maxLengthTitleLong) as titlelong,
             substring(dbo.OmitCharacters(smd.titleshort, @omitTitleShort), 1, @maxLengthTitleShort) as titleshort,
-			trim(substring(dbo.OmitCharacters(smd.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+	    trim(substring(dbo.OmitCharacters(smd.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             substring(dbo.OmitCharacters(smd.publish_date, @omitPublishDate), 1, @maxLengthPublishDate) as publish_date,
             mfas.actionstatus as actionstatus,
             mf.mfID as mfID
@@ -650,7 +652,7 @@ begin
           (
             titlelong,
             titleshort,
-			info_url,
+	    info_url,
             publish_date,
             actionstatus,
             created_date,
@@ -659,7 +661,7 @@ begin
           select
           md.titlelong,
           md.titleshort,
-		  md.info_url,
+	  md.info_url,
           cast(md.publish_date as datetime2(6)),
           iif(md.actionstatus is null, 0, md.actionstatus),
           cast(getdate() as datetime2(6)),
@@ -710,7 +712,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(tft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(tft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
-			trim(substring(dbo.OmitCharacters(tft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+	    trim(substring(dbo.OmitCharacters(tft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(tft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.TVFeedTemp tft
             where
@@ -732,9 +734,9 @@ begin
           (
             -- Select unique records
             select
-			substring(dbo.OmitCharacters(std.titlelong, @omitTitleLong), 1, @maxLengthTitleLong) as titlelong,
+	    substring(dbo.OmitCharacters(std.titlelong, @omitTitleLong), 1, @maxLengthTitleLong) as titlelong,
             substring(dbo.OmitCharacters(std.titleshort, @omitTitleShort), 1, @maxLengthTitleShort) as titleshort,
-			trim(substring(dbo.OmitCharacters(std.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+	    trim(substring(dbo.OmitCharacters(std.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             substring(dbo.OmitCharacters(std.publish_date, @omitPublishDate), 1, @maxLengthPublishDate) as publish_date,
             tfas.actionstatus as actionstatus,
             tf.tfID as tfID
@@ -761,7 +763,7 @@ begin
           (
             titlelong,
             titleshort,
-			info_url,
+	    info_url,
             publish_date,
             actionstatus,
             created_date,
@@ -770,7 +772,7 @@ begin
           select
           td.titlelong,
           td.titleshort,
-		  td.info_url,
+	  td.info_url,
           cast(td.publish_date as datetime2(6)),
           iif(td.actionstatus is null, 0, td.actionstatus),
           cast(getdate() as datetime2(6)),
