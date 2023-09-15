@@ -177,16 +177,16 @@ as $$
           (
             titlelong,
             titleshort,
+		    info_url,
             publish_date,
-            info_url,
             created_date
           )
           values
           (
             titlelongstring,
             lower(titleshortstring),
+		    infourlstring,
             publishdatestring,
-            infourlstring,
             cast(current_timestamp as timestamp)
           );
 
@@ -221,16 +221,16 @@ as $$
           (
             titlelong,
             titleshort,
+		    info_url,
             publish_date,
-            info_url,
             created_date
           )
           values
           (
             titlelongstring,
             lower(titleshortstring),
+		    infourlstring,
             publishdatestring,
-            infourlstring,
             cast(current_timestamp as timestamp)
           );
 
@@ -275,6 +275,7 @@ as $$
           select
           cast(trim(substring(regexp_replace(regexp_replace(mft.titlelong, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as citext) as titlelong,
           cast(trim(substring(regexp_replace(regexp_replace(mft.titleshort, omitTitleShort, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleShort)) as citext) as titleshort,
+		  cast(trim(substring(regexp_replace(regexp_replace(mft.info_url, omitInfoUrl, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthInfoUrl)) as citext) as info_url,
           trim(substring(regexp_replace(regexp_replace(mft.publish_date, omitPublishDate, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthPublishDate)) as publish_date
           from moviefeedtemp mft
           where
@@ -289,12 +290,8 @@ as $$
               mft.titleshort is not null and
               mft.publish_date is not null
             )
-          ) and
-          (
-            cast(mft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
-            cast(mft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
           )
-          group by mft.titlelong, mft.titleshort, mft.publish_date
+          group by mft.titlelong, mft.titleshort, mft.info_url, mft.publish_date
         ),
         movieDetails as
         (
@@ -302,6 +299,7 @@ as $$
           select
           smd.titlelong as titlelong,
           smd.titleshort as titleshort,
+		  smd.info_url as info_url,
           smd.publish_date as publish_date,
           mfas.actionstatus as actionstatus,
           mf.mfID as mfID
@@ -329,7 +327,7 @@ as $$
               smd.titlelong ilike concat('%', substring(yearString, 1, 4), '%')
             )
           )
-          group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
+          group by smd.titlelong, smd.titleshort, smd.info_url, smd.publish_date, mfas.actionstatus, mf.mfID
         )
 
         -- Update records
@@ -368,6 +366,7 @@ as $$
           select
           cast(trim(substring(regexp_replace(regexp_replace(tft.titlelong, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as citext) as titlelong,
           cast(trim(substring(regexp_replace(regexp_replace(tft.titleshort, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as citext) as titleshort,
+		  cast(trim(substring(regexp_replace(regexp_replace(tft.info_url, omitInfoUrl, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthInfoUrl)) as citext) as info_url,
           trim(substring(regexp_replace(regexp_replace(tft.publish_date, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as publish_date
           from tvfeedtemp tft
           where
@@ -382,12 +381,8 @@ as $$
               tft.titleshort is not null and
               tft.publish_date is not null
             )
-          ) and
-          (
-            cast(tft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
-            cast(tft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
           )
-          group by tft.titlelong, tft.titleshort, tft.publish_date
+          group by tft.titlelong, tft.titleshort, tft.info_url, tft.publish_date
         ),
         tvDetails as
         (
@@ -395,6 +390,7 @@ as $$
           select
           std.titlelong as titlelong,
           std.titleshort as titleshort,
+		  std.info_url as info_url,
           std.publish_date as publish_date,
           tfas.actionstatus as actionstatus,
           tf.tfID as tfID
@@ -410,7 +406,7 @@ as $$
           where
           tfas.actionstatus not in (1) and
           tf.tfID is not null
-          group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+          group by std.titlelong, std.titleshort, std.info_url, std.publish_date, tfas.actionstatus, tf.tfID
         )
 
         -- Update records
@@ -457,6 +453,7 @@ as $$
         (
           titlelong,
           titleshort,
+		  info_url,
           publish_date,
           actionstatus,
           created_date,
@@ -470,6 +467,7 @@ as $$
           select
           cast(trim(substring(regexp_replace(regexp_replace(mft.titlelong, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as citext) as titlelong,
           cast(trim(substring(regexp_replace(regexp_replace(mft.titleshort, omitTitleShort, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleShort)) as citext) as titleshort,
+		  cast(trim(substring(regexp_replace(regexp_replace(mft.info_url, omitInfoUrl, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthInfoUrl)) as citext) as info_url,
           trim(substring(regexp_replace(regexp_replace(mft.publish_date, omitPublishDate, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthPublishDate)) as publish_date
           from moviefeedtemp mft
           where
@@ -484,12 +482,8 @@ as $$
               mft.titleshort is not null and
               mft.publish_date is not null
             )
-          ) -- and
-          -- (
-          --   cast(mft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
-          --   cast(mft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
-          -- )
-          group by mft.titlelong, mft.titleshort, mft.publish_date
+          )
+          group by mft.titlelong, mft.titleshort, mft.info_url, mft.publish_date
         ),
         movieDetails as
         (
@@ -497,6 +491,7 @@ as $$
           select
           smd.titlelong as titlelong,
           smd.titleshort as titleshort,
+		  smd.info_url as info_url,
           smd.publish_date as publish_date,
           mfas.actionstatus as actionstatus,
           mf.mfID as mfID
@@ -527,13 +522,14 @@ as $$
               smd.titlelong ilike concat('%', substring(yearString, 1, 4), '%')
             )
           )
-          group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
+          group by smd.titlelong, smd.titleshort, smd.info_url, smd.publish_date, mfas.actionstatus, mf.mfID
         )
 
         -- Select records
         select
         md.titlelong,
         md.titleshort,
+		md.info_url,
         cast(md.publish_date as timestamp),
         case
           when md.actionstatus is null
@@ -545,7 +541,7 @@ as $$
         cast(current_timestamp as timestamp),
         cast(current_timestamp as timestamp)
         from movieDetails md
-        group by md.titlelong, md.titleshort, md.publish_date, md.actionstatus;
+        group by md.titlelong, md.titleshort, md.info_url, md.publish_date, md.actionstatus;
 
         -- Set message
         result := concat('{"Status": "Success", "Message": "Record(s) inserted"}');
@@ -572,6 +568,7 @@ as $$
         (
           titlelong,
           titleshort,
+		  info_url,
           publish_date,
           actionstatus,
           created_date,
@@ -585,6 +582,7 @@ as $$
           select
           cast(trim(substring(regexp_replace(regexp_replace(tft.titlelong, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as citext) as titlelong,
           cast(trim(substring(regexp_replace(regexp_replace(tft.titleshort, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as citext) as titleshort,
+		  cast(trim(substring(regexp_replace(regexp_replace(tft.info_url, omitInfoUrl, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthInfoUrl)) as citext) as info_url,
           trim(substring(regexp_replace(regexp_replace(tft.publish_date, omitTitleLong, ' ', 'g'), '[ ]{2,}', ' ', 'g'), 1, maxLengthTitleLong)) as publish_date
           from tvfeedtemp tft
           where
@@ -599,12 +597,8 @@ as $$
               tft.titleshort is not null and
               tft.publish_date is not null
             )
-          ) -- and
-          -- (
-          --   cast(tft.publish_date as timestamp) >= current_timestamp + interval '-1 hour' and
-          --   cast(tft.publish_date as timestamp) <= current_timestamp + interval '0 hour'
-          -- )
-          group by tft.titlelong, tft.titleshort, tft.publish_date
+          )
+          group by tft.titlelong, tft.titleshort, tft.info_url, tft.publish_date
         ),
         tvDetails as
         (
@@ -612,6 +606,7 @@ as $$
           select
           std.titlelong as titlelong,
           std.titleshort as titleshort,
+		  std.info_url as info_url,
           std.publish_date as publish_date,
           tfas.actionstatus as actionstatus,
           tf.tfID as tfID
@@ -630,13 +625,14 @@ as $$
             tfas.actionstatus is null
           ) and
           tf.tfID is null
-          group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+          group by std.titlelong, std.titleshort, std.info_url, std.publish_date, tfas.actionstatus, tf.tfID
         )
 
         -- Select records
         select
         td.titlelong,
         td.titleshort,
+		td.info_url,
         cast(td.publish_date as timestamp),
         case
           when td.actionstatus is null
@@ -648,7 +644,7 @@ as $$
         cast(current_timestamp as timestamp),
         cast(current_timestamp as timestamp)
         from tvDetails td
-        group by td.titlelong, td.titleshort, td.publish_date, td.actionstatus;
+        group by td.titlelong, td.titleshort, td.info_url, td.publish_date, td.actionstatus;
 
         -- Set message
         result := concat('{"Status": "Success", "Message": "Record(s) inserted"}');
