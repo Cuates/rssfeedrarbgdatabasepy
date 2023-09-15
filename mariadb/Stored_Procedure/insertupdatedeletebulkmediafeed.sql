@@ -4,7 +4,7 @@
 -- =================================================
 --        File: insertupdatedeletebulkmediafeed
 --     Created: 08/26/2020
---     Updated: 09/10/2023
+--     Updated: 09/15/2023
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert update delete bulk media feed
@@ -201,16 +201,16 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           (
             titlelong,
             titleshort,
-            publish_date,
             info_url,
+            publish_date,
             created_date
           )
           values
           (
             titlelong,
             lower(titleshort),
-            publishdate,
             infourl,
+            publishdate,
             current_timestamp(6)
           );
 
@@ -247,16 +247,16 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         (
           titlelong,
           titleshort,
-          publish_date,
           info_url,
+          publish_date,
           created_date
         )
         values
         (
           titlelong,
           lower(titleshort),
-          publishdate,
           infourl,
+          publishdate,
           current_timestamp(6)
         );
 
@@ -297,12 +297,13 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         `mfID` bigint(20) default null,
         `titlelong` varchar(255) collate utf8mb4_unicode_520_ci not null,
         `titleshort` varchar(255) collate utf8mb4_unicode_520_ci not null,
+        `info_url` varchar(8000) collate utf8mb4_unicode_520_ci null,
         `publish_date` datetime not null,
         `actionstatus` int(11) null
       );
 
       -- Insert records
-      insert into MovieFeedTempTable (titlelong, titleshort, publish_date, actionstatus, mfID)
+      insert into MovieFeedTempTable (titlelong, titleshort, info_url, publish_date, actionstatus, mfID)
 
       -- Remove duplicate records based on group by
       with subMovieDetails as
@@ -311,6 +312,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         select
         trim(substring(regexp_replace(regexp_replace(mft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
         trim(substring(regexp_replace(regexp_replace(mft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
+        trim(substring(regexp_replace(regexp_replace(mft.info_url, omitInfoUrl, ' '), '[ ]{2,}', ' '), 1, maxLengthInfoUrl)) as `info_url`,
         trim(substring(regexp_replace(regexp_replace(mft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
         from moviefeedtemp mft
         where
@@ -325,12 +327,8 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
             mft.titleshort is not null and
             mft.publish_date is not null
           )
-        ) and
-        (
-          cast(mft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
-          cast(mft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
         )
-        group by mft.titlelong, mft.titleshort, mft.publish_date
+        group by mft.titlelong, mft.titleshort, mft.info_url, mft.publish_date
       ),
       movieDetails as
       (
@@ -338,6 +336,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         select
         smd.titlelong as `titlelong`,
         smd.titleshort as `titleshort`,
+        smd.info_url as `info_url`,
         smd.publish_date as `publish_date`,
         mfas.actionstatus as `actionstatus`,
         mf.mfID as `mfID`
@@ -365,13 +364,14 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
             smd.titlelong like concat('%', substring(yearString, 1, 4), '%')
           )
         )
-        group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
+        group by smd.titlelong, smd.titleshort, smd.info_url, smd.publish_date, mfas.actionstatus, mf.mfID
       )
 
       -- Select records
       select
       md.titlelong as `titlelong`,
       md.titleshort as `titleshort`,
+      md.info_url as `info_url`,
       md.publish_date as `publish_date`,
       md.actionstatus as `actionstatus`,
       md.mfID as `mfID`
@@ -416,12 +416,13 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         `tfID` bigint(20) default null,
         `titlelong` varchar(255) collate utf8mb4_unicode_520_ci not null,
         `titleshort` varchar(255) collate utf8mb4_unicode_520_ci not null,
+        `info_url` varchar(8000) collate utf8mb4_unicode_520_ci null,
         `publish_date` datetime not null,
         `actionstatus` int(11) null
       );
 
       -- Insert records
-      insert into TVFeedTempTable (titlelong, titleshort, publish_date, actionstatus, tfID)
+      insert into TVFeedTempTable (titlelong, titleshort, info_url, publish_date, actionstatus, tfID)
 
       -- Remove duplicate records based on group by
       with subTVDetails as
@@ -430,6 +431,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         select
         trim(substring(regexp_replace(regexp_replace(tft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
         trim(substring(regexp_replace(regexp_replace(tft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
+        trim(substring(regexp_replace(regexp_replace(tft.info_url, omitInfoUrl, ' '), '[ ]{2,}', ' '), 1, maxLengthInfoUrl)) as `info_url`,
         trim(substring(regexp_replace(regexp_replace(tft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
         from tvfeedtemp tft
         where
@@ -444,12 +446,8 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
             tft.titleshort is not null and
             tft.publish_date is not null
           )
-        ) and
-        (
-          cast(tft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
-          cast(tft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
         )
-        group by tft.titlelong, tft.titleshort, tft.publish_date
+        group by tft.titlelong, tft.titleshort, tft.info_url, tft.publish_date
       ),
       tvDetails as
       (
@@ -457,6 +455,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         select
         std.titlelong as `titlelong`,
         std.titleshort as `titleshort`,
+        std.info_url as `info_url`,
         std.publish_date as `publish_date`,
         tfas.actionstatus as `actionstatus`,
         tf.tfID as `tfID`
@@ -472,13 +471,14 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
         where
         tfas.actionstatus not in (1) and
         tf.tfID is not null
-        group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+        group by std.titlelong, std.titleshort, std.info_url, std.publish_date, tfas.actionstatus, tf.tfID
       )
 
       -- Select records
       select
       td.titlelong as `titlelong`,
       td.titleshort as `titleshort`,
+      td.info_url as `info_url`,
       td.publish_date as `publish_date`,
       td.actionstatus as `actionstatus`,
       td.tfID as `tfID`
@@ -525,7 +525,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
       -- Start the tranaction
       start transaction;
         -- Insert records
-        insert into moviefeed (titlelong, titleshort, publish_date, actionstatus, created_date, modified_date)
+        insert into moviefeed (titlelong, titleshort, info_url, publish_date, actionstatus, created_date, modified_date)
 
         -- Remove duplicate records based on group by
         with subMovieDetails as
@@ -534,6 +534,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           select
           trim(substring(regexp_replace(regexp_replace(mft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
           trim(substring(regexp_replace(regexp_replace(mft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
+          trim(substring(regexp_replace(regexp_replace(mft.info_url, omitInfoUrl, ' '), '[ ]{2,}', ' '), 1, maxLengthInfoUrl)) as `info_url`,
           trim(substring(regexp_replace(regexp_replace(mft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
           from moviefeedtemp mft
           where
@@ -548,12 +549,8 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
               mft.titleshort is not null and
               mft.publish_date is not null
             )
-          ) -- and
-          -- (
-          --   cast(tft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
-          --   cast(tft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
-          -- )
-          group by mft.titlelong, mft.titleshort, mft.publish_date
+          )
+          group by mft.titlelong, mft.titleshort, mft.info_url, mft.publish_date
         ),
         movieDetails as
         (
@@ -561,6 +558,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           select
           smd.titlelong as `titlelong`,
           smd.titleshort as `titleshort`,
+          smd.info_url as `info_url`,
           smd.publish_date as `publish_date`,
           mfas.actionstatus as `actionstatus`,
           mf.mfID as `mfID`
@@ -591,19 +589,20 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
               smd.titlelong like concat('%', substring(yearString, 1, 4), '%')
             )
           )
-          group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
+          group by smd.titlelong, smd.titleshort, smd.info_url, smd.publish_date, mfas.actionstatus, mf.mfID
         )
 
         -- Select records
         select
         md.titlelong,
         md.titleshort,
+        md.info_url,
         cast(md.publish_date as datetime),
         if(md.actionstatus is null, 0, md.actionstatus),
         cast(current_timestamp(6) as datetime),
         cast(current_timestamp(6) as datetime)
         from movieDetails md
-        group by md.titlelong, md.titleshort, md.publish_date, md.actionstatus;
+        group by md.titlelong, md.titleshort, md.info_url, md.publish_date, md.actionstatus;
 
         -- Check whether the insert was successful
         if code = successcode then
@@ -629,7 +628,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
       -- Start the tranaction
       start transaction;
         -- Insert records
-        insert into tvfeed (titlelong, titleshort, publish_date, actionstatus, created_date, modified_date)
+        insert into tvfeed (titlelong, titleshort, info_url, publish_date, actionstatus, created_date, modified_date)
 
         -- Remove duplicate records based on group by
         with subTVDetails as
@@ -638,6 +637,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           select
           trim(substring(regexp_replace(regexp_replace(tft.titlelong, omitTitleLong, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleLong)) as `titlelong`,
           trim(substring(regexp_replace(regexp_replace(tft.titleshort, omitTitleShort, ' '), '[ ]{2,}', ' '), 1, maxLengthTitleShort)) as `titleshort`,
+          trim(substring(regexp_replace(regexp_replace(tft.info_url, omitInfoUrl, ' '), '[ ]{2,}', ' '), 1, maxLengthInfoUrl)) as `info_url`,
           trim(substring(regexp_replace(regexp_replace(tft.publish_date, omitPublishDate, ' '), '[ ]{2,}', ' '), 1, maxLengthPublishDate)) as `publish_date`
           from tvfeedtemp tft
           where
@@ -652,12 +652,8 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
               tft.titleshort is not null and
               tft.publish_date is not null
             )
-          ) -- and
-          -- (
-          --   cast(tft.publish_date as datetime) >= date_add(current_timestamp(6), interval -1 hour) and
-          --   cast(tft.publish_date as datetime) <= date_add(current_timestamp(6), interval 0 hour)
-          -- ) and
-          group by tft.titlelong, tft.titleshort, tft.publish_date
+          )
+          group by tft.titlelong, tft.titleshort, tft.info_url, tft.publish_date
         ),
         tvDetails as
         (
@@ -665,6 +661,7 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
           select
           std.titlelong as `titlelong`,
           std.titleshort as `titleshort`,
+          std.info_url as `info_url`,
           std.publish_date as `publish_date`,
           tfas.actionstatus as `actionstatus`,
           tf.tfID as `tfID`
@@ -683,19 +680,20 @@ create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlel
             tfas.actionstatus is null
           ) and
           tf.tfID is null
-          group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+          group by std.titlelong, std.titleshort, std.info_url, std.publish_date, tfas.actionstatus, tf.tfID
         )
 
         -- Select records
         select
         td.titlelong,
         td.titleshort,
+        td.info_url,
         cast(td.publish_date as datetime),
         if(td.actionstatus is null, 0, td.actionstatus),
         cast(current_timestamp(6) as datetime),
         cast(current_timestamp(6) as datetime)
         from tvDetails td
-        group by td.titlelong, td.titleshort, td.publish_date, td.actionstatus;
+        group by td.titlelong, td.titleshort, td.info_url, td.publish_date, td.actionstatus;
 
         -- Check whether the insert was successful
         if code = successcode then
