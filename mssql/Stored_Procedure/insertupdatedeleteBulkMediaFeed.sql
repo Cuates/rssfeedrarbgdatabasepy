@@ -17,7 +17,7 @@ go
 -- =================================================
 --        File: insertupdatedeleteBulkMediaFeed
 --     Created: 08/26/2020
---     Updated: 09/10/2023
+--     Updated: 09/15/2023
 --  Programmer: Cuates
 --   Update By: Cuates
 --     Purpose: Insert Update Delete Bulk Media Feed
@@ -33,10 +33,7 @@ create procedure [dbo].[insertupdatedeleteBulkMediaFeed]
   @infourl nvarchar(max) = null
 as
 begin
-  -- Set nocount on added to prevent extra result sets from interfering with select statements
-  set nocount on
-
-  -- Declare variables
+    -- Declare variables
   declare @yearString as nvarchar(max)
   declare @omitOptionMode as nvarchar(max)
   declare @omitTitleLong as nvarchar(max)
@@ -47,6 +44,7 @@ begin
   declare @maxLengthTitleLong as int
   declare @maxLengthTitleShort as int
   declare @maxLengthPublishDate as int
+  declare @maxLengthInfoUrl as int
   declare @result as nvarchar(max)
 
   -- Set variables
@@ -252,16 +250,16 @@ begin
               (
                 titlelong,
                 titleshort,
+				info_url,
                 publish_date,
-                info_url,
                 created_date
               )
               values
               (
                 @titlelong,
                 lower(@titleshort),
+				@infourl,
                 @publishdate,
-                @infourl,
                 cast(getdate() as datetime2(6))
               )
 
@@ -316,16 +314,16 @@ begin
               (
                 titlelong,
                 titleshort,
+				info_url,
                 publish_date,
-                info_url,
                 created_date
               )
               values
               (
                 @titlelong,
                 lower(@titleshort),
+				@infourl,
                 @publishdate,
-                @infourl,
                 cast(getdate() as datetime2(6))
               )
 
@@ -383,6 +381,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(mft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(mft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
+			trim(substring(dbo.OmitCharacters(mft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(mft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.MovieFeedTemp mft
             where
@@ -397,12 +396,8 @@ begin
                 mft.titleshort is not null and
                 mft.publish_date is not null
               )
-            ) and
-            (
-              cast(mft.publish_date as datetime2(6)) >= dateadd(hour, -1, getdate()) and
-              cast(mft.publish_date as datetime2(6)) <= dateadd(hour, 0, getdate())
             )
-            group by mft.titlelong, mft.titleshort, mft.publish_date
+            group by mft.titlelong, mft.titleshort, mft.info_url, mft.publish_date
           ),
           movieDetails as
           (
@@ -410,6 +405,7 @@ begin
             select
             smd.titlelong as titlelong,
             smd.titleshort as titleshort,
+			smd.info_url as info_url,
             smd.publish_date as publish_date,
             mfas.actionstatus as actionstatus,
             mf.mfID as mfID
@@ -437,7 +433,7 @@ begin
                 smd.titlelong like concat('%', substring(@yearString, 1, 4), '%')
               )
             )
-            group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
+            group by smd.titlelong, smd.titleshort, smd.info_url, smd.publish_date, mfas.actionstatus, mf.mfID
           )
 
           -- Update records
@@ -492,6 +488,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(tft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(tft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
+			trim(substring(dbo.OmitCharacters(tft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(tft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.TVFeedTemp tft
             where
@@ -506,12 +503,8 @@ begin
                 tft.titleshort is not null and
                 tft.publish_date is not null
               )
-            ) and
-            (
-              cast(tft.publish_date as datetime2(6)) >= dateadd(hour, -1, getdate()) and
-              cast(tft.publish_date as datetime2(6)) <= dateadd(hour, 0, getdate())
             )
-            group by tft.titlelong, tft.titleshort, tft.publish_date
+            group by tft.titlelong, tft.titleshort, tft.info_url, tft.publish_date
           ),
           tvDetails as
           (
@@ -519,6 +512,7 @@ begin
             select
             std.titlelong as titlelong,
             std.titleshort as titleshort,
+			std.info_url as info_url,
             std.publish_date as publish_date,
             tfas.actionstatus as actionstatus,
             tf.tfID as tfID
@@ -534,7 +528,7 @@ begin
             where
             tfas.actionstatus not in (1) and
             tf.tfID is not null
-            group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+            group by std.titlelong, std.titleshort, std.info_url, std.publish_date, tfas.actionstatus, tf.tfID
           )
 
           -- Update records
@@ -593,6 +587,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(mft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(mft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
+			trim(substring(dbo.OmitCharacters(mft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(mft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.MovieFeedTemp mft
             where
@@ -607,20 +602,17 @@ begin
                 mft.titleshort is not null and
                 mft.publish_date is not null
               )
-            ) -- and
-            -- (
-            --   cast(mft.publish_date as datetime2(6)) >= dateadd(hour, -1, getdate()) and
-            --   cast(mft.publish_date as datetime2(6)) <= dateadd(hour, 0, getdate())
-            -- )
-            group by mft.titlelong, mft.titleshort, mft.publish_date
+            )
+            group by mft.titlelong, mft.titleshort, mft.info_url, mft.publish_date
           ),
           movieDetails as
           (
             -- Select unique records
             select
-            substring(dbo.OmitCharacters(smd.titlelong, @omitTitleLong), 1, 255) as titlelong,
-            substring(dbo.OmitCharacters(smd.titleshort, @omitTitleShort), 1, 255) as titleshort,
-            substring(dbo.OmitCharacters(smd.publish_date, @omitPublishDate), 1, 255) as publish_date,
+            substring(dbo.OmitCharacters(smd.titlelong, @omitTitleLong), 1, @maxLengthTitleLong) as titlelong,
+            substring(dbo.OmitCharacters(smd.titleshort, @omitTitleShort), 1, @maxLengthTitleShort) as titleshort,
+			trim(substring(dbo.OmitCharacters(smd.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+            substring(dbo.OmitCharacters(smd.publish_date, @omitPublishDate), 1, @maxLengthPublishDate) as publish_date,
             mfas.actionstatus as actionstatus,
             mf.mfID as mfID
             from subMovieDetails smd
@@ -650,7 +642,7 @@ begin
                 smd.titlelong like concat('%', substring(@yearString, 1, 4), '%')
               )
             )
-            group by smd.titlelong, smd.titleshort, smd.publish_date, mfas.actionstatus, mf.mfID
+            group by smd.titlelong, smd.titleshort, smd.info_url, smd.publish_date, mfas.actionstatus, mf.mfID
           )
 
           -- Insert records
@@ -658,6 +650,7 @@ begin
           (
             titlelong,
             titleshort,
+			info_url,
             publish_date,
             actionstatus,
             created_date,
@@ -666,12 +659,13 @@ begin
           select
           md.titlelong,
           md.titleshort,
+		  md.info_url,
           cast(md.publish_date as datetime2(6)),
           iif(md.actionstatus is null, 0, md.actionstatus),
           cast(getdate() as datetime2(6)),
           cast(getdate() as datetime2(6))
           from movieDetails md
-          group by md.titlelong, md.titleshort, md.publish_date, md.actionstatus
+          group by md.titlelong, md.titleshort, md.info_url, md.publish_date, md.actionstatus
 
           -- Check if there is trans count
           if @@trancount > 0
@@ -716,6 +710,7 @@ begin
             select
             trim(substring(dbo.OmitCharacters(tft.titlelong, @omitTitleLong), 1, @maxLengthTitleLong)) as titlelong,
             trim(substring(dbo.OmitCharacters(tft.titleshort, @omitTitleShort), 1, @maxLengthTitleShort)) as titleshort,
+			trim(substring(dbo.OmitCharacters(tft.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
             trim(substring(dbo.OmitCharacters(tft.publish_date, @omitPublishDate), 1, @maxLengthPublishDate)) as publish_date
             from dbo.TVFeedTemp tft
             where
@@ -730,20 +725,17 @@ begin
                 tft.titleshort is not null and
                 tft.publish_date is not null
               )
-            ) -- and
-            -- (
-            --   cast(tft.publish_date as datetime2(6)) >= dateadd(hour, -1, getdate()) and
-            --   cast(tft.publish_date as datetime2(6)) <= dateadd(hour, 0, getdate())
-            -- ) and
-            group by tft.titlelong, tft.titleshort, tft.publish_date
+            )
+            group by tft.titlelong, tft.titleshort, tft.info_url, tft.publish_date
           ),
           tvDetails as
           (
             -- Select unique records
             select
-            std.titlelong as titlelong,
-            std.titleshort as titleshort,
-            std.publish_date as publish_date,
+			substring(dbo.OmitCharacters(std.titlelong, @omitTitleLong), 1, @maxLengthTitleLong) as titlelong,
+            substring(dbo.OmitCharacters(std.titleshort, @omitTitleShort), 1, @maxLengthTitleShort) as titleshort,
+			trim(substring(dbo.OmitCharacters(std.info_url, @omitInfoUrl), 1, @maxLengthInfoUrl)) as info_url,
+            substring(dbo.OmitCharacters(std.publish_date, @omitPublishDate), 1, @maxLengthPublishDate) as publish_date,
             tfas.actionstatus as actionstatus,
             tf.tfID as tfID
             from subTVDetails std
@@ -761,7 +753,7 @@ begin
               tfas.actionstatus is null
             ) and
             tf.tfID is null
-            group by std.titlelong, std.titleshort, std.publish_date, tfas.actionstatus, tf.tfID
+            group by std.titlelong, std.titleshort, std.info_url, std.publish_date, tfas.actionstatus, tf.tfID
           )
 
           -- Insert records
@@ -769,6 +761,7 @@ begin
           (
             titlelong,
             titleshort,
+			info_url,
             publish_date,
             actionstatus,
             created_date,
@@ -777,12 +770,13 @@ begin
           select
           td.titlelong,
           td.titleshort,
+		  td.info_url,
           cast(td.publish_date as datetime2(6)),
           iif(td.actionstatus is null, 0, td.actionstatus),
           cast(getdate() as datetime2(6)),
           cast(getdate() as datetime2(6))
           from tvDetails td
-          group by td.titlelong, td.titleshort, td.publish_date, td.actionstatus
+          group by td.titlelong, td.titleshort, td.info_url, td.publish_date, td.actionstatus
 
           -- Check if there is trans count
           if @@trancount > 0
