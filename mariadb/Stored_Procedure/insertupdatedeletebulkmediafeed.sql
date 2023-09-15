@@ -17,37 +17,13 @@ drop procedure if exists insertupdatedeletebulkmediafeed;
 delimiter //
 create procedure `insertupdatedeletebulkmediafeed`(in optionMode text, in titlelong text, in titleshort text, in publishdate text, in infourl text)
   begin
-    -- Declare variable
-    declare yearString varchar(255);
-    declare omitOptionMode varchar(255);
-    declare omitTitleLong varchar(255);
-    declare omitTitleShort varchar(255);
-    declare omitPublishDate varchar(255);
-    declare omitInfoUrl varchar(8000);
-    declare maxLengthOptionMode int;
-    declare maxLengthTitleLong int;
-    declare maxLengthTitleShort int;
-    declare maxLengthPublishDate int;
-    declare maxLengthInfoUrl int;
-    declare code varchar(5) default '00000';
-    declare msg text;
-    declare result text;
-    declare successcode varchar(5);
-
-    -- Declare exception handler for failed insert
-    declare CONTINUE HANDLER FOR SQLEXCEPTION
-      begin
-        GET DIAGNOSTICS CONDITION 1
-          code = RETURNED_SQLSTATE, msg = MESSAGE_TEXT;
-      end;
-
     -- Set variable
     set yearString = '';
     set omitOptionMode = '[^a-zA-Z]';
     set omitTitleLong = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitTitleShort = '[^a-zA-Z0-9 !"\#$%&\'()*+,\-./:;<=>?@\[\\\]^_‘{|}~¡¢£¥¦§¨©®¯°±´µ¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŒœŠšŸŽžƒˆˇ˘˙˚˛ΓΘΣΦΩαδεπστφ–—‘’“”•…€™∂∆∏∑∙√∞∩∫≈≠≡≤≥]';
     set omitPublishDate = '[^0-9\-:./ ]';
-    set omitInfoUrl = '[^a-zA-Z0-9\-./%?=&]';
+    set omitInfoUrl = '[^a-zA-Z0-9:\-./%?=&]';
     set maxLengthOptionMode = 255;
     set maxLengthTitleLong = 255;
     set maxLengthTitleShort = 255;
